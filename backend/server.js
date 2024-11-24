@@ -13,7 +13,7 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("Connected to MongoDB Atlas"))
   .catch((err) => console.error("Error connecting to MongoDB:", err));
 
-// Test route
+// Sample Route
 app.get("/", (req, res) => {
   res.send("Backend is running!");
 });
