@@ -14,10 +14,15 @@ const Login = () => {
 
     try {
       // Make the API call to login the user
-      const response = await axios.post('/api/login', { email, password });
+      const response = await axios.post('http://localhost:5001/user/login', { email, password });
       console.log(response.data); // Handle success - in a real app, you might store the token here
     } catch (err) {
-      setError(err.response.data.message || 'An error occurred during login'); // Set error message
+      // Log the error for debugging
+      console.error("Error during login:", err);
+  
+      // Safely handle cases where err.response is undefined
+      const errorMessage = err.response?.data?.message || 'An error occurred during login';
+      setError(errorMessage); // Set error message in state
     }
   };
 
