@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User.js");
+const verifyToken = require("../middleware/verifyToken");
 
 const router = express.Router();
 
@@ -51,7 +52,7 @@ router.post("/login", async (req, res) => {
 });
 
 //recover profile
-router.get("/profile/:userID", async (req, res) => {
+router.get("/profile/:userID", verifyToken, async (req, res) => {
     const { userID } = req.params;
 
     try {
