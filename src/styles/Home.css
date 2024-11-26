@@ -1,0 +1,47 @@
+/* Center the content on the page */
+.home-container {
+    text-align: center;
+    margin-top: 20%;
+    font-family: Arial, sans-serif;
+  }
+  
+  .welcome-message {
+    font-size: 2.5rem;
+    color: #333;
+  }
+  
+  .description {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  /* Button styling */
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .nav-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .login-button {
+    background-color: #5f9ea0;
+    color: white;
+  }
+  
+  .signup-button {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .nav-button:hover {
+    opacity: 0.9;
+  }
+  
