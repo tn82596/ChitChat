@@ -1,0 +1,41 @@
+/* RecentMessages.css */
+.recent-messages {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+  }
+  
+  .conversation-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.3s;
+    cursor: pointer;
+  }
+  
+  .conversation-item:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .conversation-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .conversation-name {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .conversation-last-message {
+    font-size: 0.9rem;
+    color: #777;
+  }
+  
+  .conversation-time {
+    font-size: 0.8rem;
+    color: #aaa;
+  }
