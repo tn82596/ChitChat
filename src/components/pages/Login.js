@@ -1,5 +1,6 @@
 import React, { useState } from 'react'; // Importing React and useState hook
 import axios from 'axios'; // Importing Axios for HTTP requests
+import { useNavigate } from 'react-router-dom'; // Importing useNavigate for navigation
 import '../../styles/Login.css'; // Importing the stylesheet for the Login page
 
 const Login = () => {
@@ -7,6 +8,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(''); // State to manage error messages
+  const navigate = useNavigate(); // Initialize useNavigate for navigation
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -15,7 +17,15 @@ const Login = () => {
     try {
       // Make the API call to login the user
       const response = await axios.post('http://localhost:5001/user/login', { email, password });
-      console.log(response.data); // Handle success - in a real app, you might store the token here
+      
+      // Extract the token from the response
+      const token = response.data.token;
+
+      // Store the token in localStorage (or sessionStorage)
+      localStorage.setItem('token', token);
+
+      // Navigate to the recent messages page
+      navigate('/recent-messages');
     } catch (err) {
       // Log the error for debugging
       console.error("Error during login:", err);
