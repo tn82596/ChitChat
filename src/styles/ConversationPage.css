@@ -1,0 +1,59 @@
+.conversation-page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .messages-list {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+  }
+  
+  .message-item {
+    margin-bottom: 15px;
+  }
+  
+  .message-item p {
+    margin: 0;
+  }
+  
+  .message-item span {
+    font-size: 0.8em;
+    color: #888;
+  }
+  
+  .new-message {
+    display: flex;
+    gap: 10px;
+  }
+  
+  textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .error-message {
+    color: red;
+    margin-bottom: 10px;
+  }
+  
