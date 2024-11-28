@@ -1,29 +1,29 @@
 import React from 'react';
-import './RecentMessages.css';
+import '../../styles/RecentMessages.css';
 
 const conversations = [
   {
     id: 1,
     name: 'Ashley',
-    lastMessage: 'derp',
+    lastMessage: 'matcha derp',
     time: '11:34 PM'
   },
   {
     id: 2,
     name: 'Charline',
-    lastMessage: 'hallo',
+    lastMessage: 'boba time',
     time: '11:26 PM'
   },
   {
     id: 3,
     name: 'Chloe',
-    lastMessage: 'yay!',
+    lastMessage: 'les play volleyball!',
     time: '11:10 PM'
   },
   {
     id: 4,
     name: 'Theanh',
-    lastMessage: 'fade',
+    lastMessage: 'fade teen',
     time: '10:54 PM'
   }
 ];
