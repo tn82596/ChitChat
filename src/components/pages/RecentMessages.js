@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { jwtDecode as jwt_decode } from 'jwt-decode'; // Import jwt-decode to extract user ID
+// import { jwtDecode as jwt_decode } from 'jwt-decode'; // Import jwt-decode to extract user ID
+import { jwtDecode } from 'jwt-decode';
 import '../../styles/RecentMessages.css';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 
 const RecentMessages = () => {
   const [conversations, setConversations] = useState([]);
-  
+  const navigate = useNavigate(); // Use navigate for navigation
+
   useEffect(() => {
     const fetchConversations = async () => {
       try {
@@ -19,7 +22,7 @@ const RecentMessages = () => {
         }
 
         // Decode the token to get the user ID
-        const decodedToken = jwt_decode(token);
+        const decodedToken = jwtDecode(token);
         const userID = decodedToken.userID; // Replace `userID` with the actual key that contains the user ID in your token payload
 
         // Make API request to fetch the user's conversations
@@ -40,9 +43,17 @@ const RecentMessages = () => {
     fetchConversations();
   }, []); // Empty dependency array to run this only once when the component mounts
 
+  // Handle click to create a new chat
+  const handleCreateNewChat = () => {
+    navigate('/create-chat'); // Navigate to the create-chat route
+  };
+
   return (
     <div className="recent-messages">
       <h1>Recent Messages</h1>
+      <button className="create-chat-button" onClick={handleCreateNewChat}>
+        Create New Chat
+      </button>
       {conversations.length === 0 ? (
         <p>No conversations found.</p>
       ) : (
