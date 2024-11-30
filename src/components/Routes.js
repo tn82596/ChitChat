@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import RecentMessages from './pages/RecentMessages';
+import CreateChat from "./pages/CreateChat"; 
 import ConversationPage from "./pages/ConversationPage";
 
 const AppRoutes = () => {
