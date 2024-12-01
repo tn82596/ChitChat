@@ -7,13 +7,14 @@ const router = express.Router();
 //add a new message to a conversation 
 // and update the conversation's last message & activity
 router.post("/", verifyToken, async (req, res) => {
-  const { conversationId, content } = req.body;
+  const { conversationId, content, recipientId } = req.body;
 
   try {
     const newMessage = new Message({
       conversationId,
       sender: req.user.id,
       content,
+      recipient: recipientId,
     });
 
     await newMessage.save();
