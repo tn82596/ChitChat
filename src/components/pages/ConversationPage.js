@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode'; // Import jwt-decode to extract user ID
-import '../../styles/ConversationPage.css'; // Assuming you are using a separate CSS file for styles
+import { jwtDecode } from 'jwt-decode';
+import '../../styles/ConversationPage.css';
 
 const ConversationPage = () => {
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState(''); // For the new message input
+  const [newMessage, setNewMessage] = useState('');
   const convoID = '67444adb2b1d145bdccdb098'; // Hardcoded convoID for testing
+  const [userID, setUserID] = useState(null);
+  const messagesEndRef = useRef(null); // Reference to the bottom of the message list
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -17,12 +19,19 @@ const ConversationPage = () => {
           return;
         }
 
-        // Fetch messages
+        const decodedToken = jwtDecode(token);
+        setUserID(decodedToken.userID);
+
         const response = await axios.get(`http://localhost:5001/messages/${convoID}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        setMessages(response.data);
+        // Sort messages by timestamp (ascending order)
+        const sortedMessages = response.data.sort(
+          (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+        );
+        setMessages(sortedMessages);
+        scrollToBottom(); // Scroll to the bottom after fetching messages
       } catch (error) {
         console.error('Error fetching messages:', error);
       }
@@ -39,9 +48,6 @@ const ConversationPage = () => {
         return;
       }
 
-      const decodedToken = jwtDecode(token);
-      const userID = decodedToken.userID;
-
       const response = await axios.post(
         `http://localhost:5001/messages`,
         {
@@ -54,12 +60,17 @@ const ConversationPage = () => {
         }
       );
 
-      // Add the new message to the UI
+      // Add the new message to the UI and scroll to the bottom
       setMessages((prevMessages) => [...prevMessages, response.data]);
-      setNewMessage(''); // Clear the input field
+      setNewMessage('');
+      scrollToBottom();
     } catch (error) {
       console.error('Error sending message:', error);
     }
+  };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -75,7 +86,7 @@ const ConversationPage = () => {
             {messages.map((message) => (
               <div
                 key={message._id}
-                className={`message-item ${message.sender === message._id ? 'sent' : 'received'}`}
+                className={`message-item ${message.sender === userID ? 'sent' : 'received'}`}
               >
                 <div className="message-content">{message.content}</div>
                 <div className="message-timestamp">
@@ -83,6 +94,8 @@ const ConversationPage = () => {
                 </div>
               </div>
             ))}
+            {/* Dummy div to ensure scrolling to the bottom */}
+            <div ref={messagesEndRef}></div>
           </div>
         )}
       </div>
