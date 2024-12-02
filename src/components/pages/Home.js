@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'; // For redirecting after successful signup
-import '../../styles/Home.css'
+import '../../styles/Home.css';
 
 const Home = () => {
     const navigate = useNavigate(); // To redirect to signup/login after clicking button
@@ -19,7 +19,7 @@ const Home = () => {
                 </button>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Home;

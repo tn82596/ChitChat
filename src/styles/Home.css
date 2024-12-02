@@ -1,47 +1,51 @@
-/* Center the content on the page */
-.home-container {
-    text-align: center;
-    margin-top: 20%;
-    font-family: Arial, sans-serif;
-  }
-  
-  .welcome-message {
-    font-size: 2.5rem;
-    color: #333;
-  }
-  
-  .description {
-    font-size: 1.2rem;
-    color: #666;
-    margin-bottom: 20px;
-  }
-  
-  /* Button styling */
-  .button-group {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-  }
-  
-  .nav-button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .login-button {
-    background-color: #5f9ea0;
-    color: white;
-  }
-  
-  .signup-button {
-    background-color: #4caf50;
-    color: white;
-  }
-  
-  .nav-button:hover {
-    opacity: 0.9;
-  }
-  
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f0f4f8; /* Light background color for a cleaner look */
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  text-align: center;
+}
+
+.welcome-container h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333; /* A more subtle color for the heading */
+}
+
+.buttons {
+  display: flex;
+  gap: 20px; /* Space between buttons */
+}
+
+.login-button, .signup-button {
+  padding: 15px 25px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 8px; /* Rounded corners for a softer look */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.login-button {
+  background-color: #4a90e2; /* A more vibrant blue for the login button */
+  color: white;
+}
+
+.signup-button {
+  background-color: #7ed321; /* A nice green for the signup button */
+  color: white;
+}
+
+.login-button:hover, .signup-button:hover {
+  transform: scale(1.05); /* Slight zoom-in effect */
+}
+
+.login-button:active, .signup-button:active {
+  transform: scale(0.98); /* Slight zoom-out effect on click */
+}
+
