@@ -14,7 +14,7 @@ const CreateChat = ({ userId }) => {
 
             // Check or create a conversation with the input email
             const response = await axios.post(
-                "http://localhost:5001/api/conversations",
+                "http://localhost:5001/conversations",
                 { recipientEmail },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -33,7 +33,7 @@ const CreateChat = ({ userId }) => {
             if (!token) return console.error("No token found");
 
             const response = await axios.get(
-                `http://localhost:5001/api/messages/${conversationId}`,
+                `http://localhost:5001/messages/${conversationId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
