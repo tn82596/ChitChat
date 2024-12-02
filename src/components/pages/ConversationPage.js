@@ -21,7 +21,7 @@ const ConversationPage = () => {
         }
 
         const decodedToken = jwtDecode(token);
-        setUserID(decodedToken.userID);
+        setUserID(decodedToken.id);
 
         const response = await axios.get(`http://localhost:5001/messages/${convoID}`, {
           headers: { Authorization: `Bearer ${token}` },
