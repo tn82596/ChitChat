@@ -67,4 +67,38 @@ router.get("/profile/:userID", verifyToken, async (req, res) => {
     }
 });
 
+//get name from ID
+router.get("/name/:userID", verifyToken, async (req, res) => {
+    const { userID } = req.params;
+
+    try {
+        const user = await User.findById(userID).select("name");
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({ name: user.name });
+    } catch (err) {
+        console.error("Error fetching user:", err);
+        res.status(500).json({ message: "Error fetching user", error: err.message });
+    }
+});
+
+//get ID from email
+router.get("/id/:email", verifyToken, async (req, res) => {
+    const { email } = req.params;
+
+    try {
+        const user = await User.findOne({ email }).select("_id");
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({ userID: user._id });
+    } catch (err) {
+        console.error("Error fetching user:", err);
+        res.status(500).json({ message: "Error fetching user", error: err.message });
+    }
+});
+
 module.exports = router;
