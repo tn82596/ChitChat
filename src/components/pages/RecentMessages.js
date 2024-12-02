@@ -8,107 +8,118 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate for naviga
 const RecentMessages = () => {
     const [conversations, setConversations] = useState([]);
     const navigate = useNavigate();
-  
+    const token = localStorage.getItem('token');
+    let userID = null;
+
+    if (token) {
+        const decodedToken = jwtDecode(token);
+        userID = decodedToken.id; // Extract the user ID from the token
+    }
+
     useEffect(() => {
-      const fetchConversations = async () => {
-        try {
-          // Get the token from localStorage
-          const token = localStorage.getItem('token');
-  
-          // Ensure the token exists before proceeding
-          if (!token) {
-            console.error('No token found');
-            navigate('/login'); // Redirect to login if no token is found
-            return;
-          }
-  
-          // Decode the token to get the user ID
-          const decodedToken = jwtDecode(token);
-          const userID = decodedToken.id; // Extract the user ID from the token
-  
-          // Make API request to fetch the user's conversations
-          const response = await axios.get(`http://localhost:5001/conversations/${userID}`, {
-            headers: {
-              Authorization: `Bearer ${token}` // Send the token as part of the Authorization header
+        const fetchConversations = async () => {
+            try {
+                if (!token) {
+                    console.error('No token found');
+                    navigate('/login');
+                    return;
+                }
+
+                // Fetch all conversations
+                const response = await axios.get(`http://localhost:5001/conversations/${userID}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                // Fetch names for each participant in conversations
+                const updatedConversations = await Promise.all(response.data.map(async (conversation) => {
+                    const participantNames = await Promise.all(conversation.participants.map(async (participantID) => {
+                        if (participantID === userID) return 'You';
+                        try {
+                            const participantResponse = await axios.get(`http://localhost:5001/user/name/${participantID}`, {
+                                headers: {
+                                    Authorization: `Bearer ${token}`
+                                }
+                            });
+                            return participantResponse.data.name;
+                        } catch (error) {
+                            console.error(`Error fetching name for user ID ${participantID}:`, error);
+                            return participantID; // Fallback to showing the ID in case of error
+                        }
+                    }));
+
+                    return {
+                        ...conversation,
+                        participantNames
+                    };
+                }));
+
+                setConversations(updatedConversations);
+            } catch (error) {
+                console.error('Error fetching conversations:', error);
             }
-          });
-  
-          // Debugging: Log response data to see what you receive
-          console.log('Fetched conversations:', response.data);
-  
-          // Set the fetched conversations in the component state
-          setConversations(response.data);
-        } catch (error) {
-          console.error('Error fetching conversations:', error);
-        }
-      };
-  
-      // Call the function to fetch conversations
-      fetchConversations();
-    }, [navigate]); // Add navigate to the dependency array to avoid errors in React
-  
+        };
+
+        fetchConversations();
+    }, [navigate, token, userID]);
+
     // Handle click to create a new chat
     const handleCreateNewChat = () => {
-      navigate('/create-chat'); // Navigate to the create-chat route
+        navigate('/create-chat');
     };
-  
+
     // Handle click on a conversation
     const handleConversationClick = (convoID) => {
-      navigate(`/conversation/${convoID}`); // Navigate to a specific conversation
+        navigate(`/conversation/${convoID}`);
     };
-  
-    const getOtherParticipants = (participants, currentUserID) => {
-      return participants.filter(participant => participant !== currentUserID);
-    };
-  
+
     return (
-      <div className="recent-messages">
-        <h1>Recent Messages</h1>
-        <button className="create-chat-button" onClick={handleCreateNewChat}>
-          Create New Chat
-        </button>
-        {conversations.length === 0 ? (
-          <p>No conversations found.</p>
-        ) : (
-          conversations.map((conversation) => {
-            const lastMessage = conversation.lastMessage;
-            const currentUserID = jwtDecode(localStorage.getItem('token')).userID;
-  
-            // Determine the name(s) of the other participant(s)
-            const otherParticipants = getOtherParticipants(conversation.participants, currentUserID);
-            const participantNames = otherParticipants.join(', ');
-  
-            // Prepare the preview of the last message
-            let messagePreview = '';
-            if (lastMessage) {
-              if (lastMessage.sender === currentUserID) {
-                messagePreview = `You: ${lastMessage.content}`;
-              } else {
-                messagePreview = lastMessage.content;
-              }
-            } else {
-              messagePreview = "No messages yet.";
-            }
-  
-            return (
-              <div 
-                key={conversation._id} 
-                className="conversation-item"
-                onClick={() => handleConversationClick(conversation._id)} // Add click event to navigate to conversation
-              >
-                <div className="conversation-info">
-                  <div className="conversation-name">{participantNames}</div>
-                  <div className="conversation-last-message">{messagePreview}</div>
-                </div>
-                <div className="conversation-time">
-                  {lastMessage ? new Date(lastMessage.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-                </div>
-              </div>
-            );
-          })
-        )}
-      </div>
+        <div className="recent-messages">
+            <h1>Recent Messages</h1>
+            <button className="create-chat-button" onClick={handleCreateNewChat}>
+                Create New Chat
+            </button>
+            {conversations.length === 0 ? (
+                <p>No conversations found.</p>
+            ) : (
+                conversations.map((conversation) => {
+                    const lastMessage = conversation.lastMessage;
+
+                    // Get participant names for display
+                    const participantNames = conversation.participantNames.join(', ');
+
+                    // Prepare the preview of the last message
+                    let messagePreview = '';
+                    if (lastMessage) {
+                        if (lastMessage.sender === userID) {
+                            messagePreview = `You: ${lastMessage.content}`;
+                        } else {
+                            messagePreview = lastMessage.content;
+                        }
+                    } else {
+                        messagePreview = "No messages yet.";
+                    }
+
+                    return (
+                        <div
+                            key={conversation._id}
+                            className="conversation-item"
+                            onClick={() => handleConversationClick(conversation._id)}
+                        >
+                            <div className="conversation-info">
+                                <div className="conversation-name">{participantNames}</div>
+                                <div className="conversation-last-message">{messagePreview}</div>
+                            </div>
+                            <div className="conversation-time">
+                                {lastMessage ? new Date(lastMessage.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                            </div>
+                        </div>
+                    );
+                })
+            )}
+        </div>
     );
-  };
-  
-  export default RecentMessages;
+};
+
+export default RecentMessages;
