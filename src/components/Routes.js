@@ -15,8 +15,8 @@ const AppRoutes = () => {
       <Route path="/signup" element={<Signup />} />
       <Route path="/recent-messages" element={<RecentMessages />} />
       <Route path="/create-chat" element={<CreateChat />} /> {/* Route for CreateChat */}
-      <Route path="/conversation-page" element={<ConversationPage />} />
-    </Routes>
+      <Route path="/conversation/:convoID" element={<ConversationPage />} />
+      </Routes>
   );
 };
 

@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { useParams } from 'react-router-dom';
 import '../../styles/ConversationPage.css';
 
 const ConversationPage = () => {
+  const { convoID } = useParams(); 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const convoID = '67444adb2b1d145bdccdb098'; // Hardcoded convoID for testing
   const [userID, setUserID] = useState(null);
   const messagesEndRef = useRef(null); // Reference to the bottom of the message list
 
@@ -37,7 +38,9 @@ const ConversationPage = () => {
       }
     };
 
-    fetchMessages();
+    if(convoID){
+      fetchMessages();
+    }
   }, [convoID]);
 
   const handleSendMessage = async () => {
