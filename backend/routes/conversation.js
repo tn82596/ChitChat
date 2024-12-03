@@ -6,29 +6,37 @@ const router = express.Router();
 //create a new convo
 router.post("/", verifyToken, async (req, res) => {
     const { participants } = req.body;
-
+  
     try {
-        // Check if a conversation already exists between these participants
-        const existingConversation = await Conversation.findOne({
+      // Check if a conversation already exists between these exact participants
+      const existingConversation = await Conversation.findOne({
         participants: { $all: participants },
-        participants: { $size: participants.length },
-        });
-
-        if (existingConversation) {
-        return res.status(200).json(existingConversation);
+      }).where('participants').size(participants.length);
+  
+      if (existingConversation) {
+        // Confirm exact match of participant IDs (order-independent)
+        const participantSet = new Set(participants.map(String));
+        const conversationSet = new Set(existingConversation.participants.map(String));
+  
+        if (
+          participantSet.size === conversationSet.size &&
+          [...participantSet].every((id) => conversationSet.has(id))
+        ) {
+          return res.status(200).json(existingConversation);
         }
-
-        // Create a new conversation
-        const newConversation = new Conversation({
+      }
+  
+      // If no exact match, create a new conversation
+      const newConversation = new Conversation({
         participants,
-        });
-
-        await newConversation.save();
-        res.status(201).json(newConversation);
+      });
+  
+      await newConversation.save();
+      res.status(201).json(newConversation);
     } catch (err) {
-        res.status(500).json({ message: "Error creating conversation", error: err.message });
+      res.status(500).json({ message: "Error creating conversation", error: err.message });
     }
-});
+  });
 
 
 // get all convos a user is part of, sorted by most recent activity
