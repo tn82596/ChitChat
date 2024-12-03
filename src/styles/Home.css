@@ -1,22 +1,46 @@
+/* Importing Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;700&display=swap');
+
+/* Main container for centering content */
+.home-container {
+  text-align: center;
+  margin-top: 20%;
+  font-family: 'Roboto', sans-serif; /* Changed font to Roboto for the overall body text */
+}
+
+/* Welcome container with radial gradient in the center */
 .welcome-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f0f4f8; /* Light background color for a cleaner look */
-  font-family: Arial, sans-serif;
+  background: radial-gradient(circle, #7baffe, #aec6e9); /* Circular gradient from center */
+  font-family: 'Poppins', sans-serif; /* Changed font to Poppins for the title */
   padding: 20px;
   text-align: center;
+  background-size: cover; /* Ensure the gradient covers the entire container */
 }
 
+/* Title styling */
 .welcome-container h1 {
-  font-size: 3rem;
-  font-weight: bold;
+  font-size: 5rem; /* Increased size for the title */
+  font-weight: 600; /* A bit lighter than bold for a more modern look */
   margin-bottom: 30px;
-  color: #333; /* A more subtle color for the heading */
+  color: #fff; /* White text for contrast against the gradient */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Optional: Adds a slight shadow to make the title pop */
 }
 
+/* Container for the buttons */
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px; /* Optional, for spacing between title and buttons */
+}
+
+/* Styling for the buttons */
 .buttons {
   display: flex;
   gap: 20px; /* Space between buttons */
@@ -25,27 +49,47 @@
 .login-button, .signup-button {
   padding: 15px 25px;
   font-size: 1.2rem;
+  font-family: 'Roboto', sans-serif; /* Use Roboto for the button text */
+  font-weight: 600; /* A slightly bolder font weight for better legibility */
   border: none;
   border-radius: 8px; /* Rounded corners for a softer look */
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
+/* Styling for the Log In button */
 .login-button {
-  background-color: #4a90e2; /* A more vibrant blue for the login button */
-  color: white;
+  background-color: white;
+  color: #7baffe; /* Light blue text color */
 }
 
+/* Styling for the Sign Up button */
 .signup-button {
-  background-color: #7ed321; /* A nice green for the signup button */
-  color: white;
+  background-color: white;
+  color: #7baffe; /* Light blue text color */
 }
 
+/* Hover effects for both buttons */
 .login-button:hover, .signup-button:hover {
   transform: scale(1.05); /* Slight zoom-in effect */
 }
 
+/* Active button effects */
 .login-button:active, .signup-button:active {
   transform: scale(0.98); /* Slight zoom-out effect on click */
 }
 
+/* Container for logo and title */
+.logo-container {
+  display: flex;
+  align-items: center; /* Align items vertically in the center */
+  gap: 20px; /* Space between logo and title */
+}
+
+/* Logo styling */
+.logo {
+  border-radius: 8px;
+  width: 80px;  /* Smaller width for the logo */
+  height: auto;  /* Maintain aspect ratio */
+  margin-top: 25px;
+}
