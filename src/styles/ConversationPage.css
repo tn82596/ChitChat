@@ -1,3 +1,17 @@
+/* Sender name styling */
+.message-sender {
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.sent-name {
+  text-align: right;
+}
+
+.received-name {
+  text-align: left;
+}
+
 /* Page Layout */
 .conversation-page {
   max-width: 600px;
