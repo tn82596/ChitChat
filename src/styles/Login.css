@@ -1,67 +1,117 @@
-/* Basic container for the login form */
+/* Importing Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;700&display=swap');
+
+/* Main container for centering content */
 .login-container {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  /* Form elements */
-  form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  form div {
-    margin-bottom: 15px;
-  }
-  
-  label {
-    font-size: 14px;
-    color: #333;
-  }
-  
-  input {
-    width: 100%;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  input:focus {
-    border-color: #5f9ea0;
-    outline: none;
-  }
-  
-  button {
-    background-color: #5f9ea0;
-    color: white;
-    border: none;
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #4f8a88;
-  }
-  
-  /* Error message styling */
-  .error-message {
-    color: red;
-    font-size: 14px;
-    margin-bottom: 15px;
-    text-align: center;
-  }
-  
+  text-align: center;
+  margin-top: 20%;
+  font-family: 'Roboto', sans-serif; /* Using the same font as the home page */
+}
+
+/* Welcome container with radial gradient in the center */
+.login-welcome-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers items horizontally (header and form) */
+  justify-content: center;
+  min-height: 100vh;
+  background: radial-gradient(circle, #7baffe, #aec6e9); /* Circular gradient from center */
+  font-family: 'Poppins', sans-serif; /* Changed font to Poppins for the title */
+  text-align: center;
+  background-size: cover; /* Ensure the gradient covers the entire container */
+}
+
+/* Title styling */
+.login-welcome-container h2 {
+  font-size: 3rem; /* Increased size for the title */
+  font-weight: 600;
+  margin-bottom: 30px;
+  color: #fff; /* White text for contrast against the gradient */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Optional: Adds a slight shadow to make the title pop */
+}
+
+/* Styling for the form inputs */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers the form inputs horizontally */
+  gap: 15px; /* Space between form elements */
+  width: 100%;
+  max-width: 300px; /* Adjusting form width for more space */
+}
+
+input {
+  padding: 15px;
+  font-size: 1.2rem; /* Same font size as login button */
+  font-family: 'Roboto', sans-serif; /* Match the font family */
+  font-weight: 600; /* Match the font weight */
+  border: 2px solid #7baffe;
+  border-radius: 8px;
+  width: 100%; /* Ensures the inputs fill the container width */
+  max-width: 1000px; /* Allowing input to be wider */
+  outline: none;
+}
+
+input:focus {
+  border-color: #aec6e9; /* Focused input border color */
+}
+
+/* Label styling to match login button */
+label {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.2rem; /* Same font size as login button */
+  font-weight: 600; /* Same font weight as login button */
+  color: #7baffe; /* Light blue color to match the login button */
+  margin-bottom: 5px;
+  text-align: left; /* Align the label text to the left */
+  width: 100%;
+}
+
+/* Styling for the login button container */
+.login-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 30px; /* Adds space between the form and the button */
+}
+
+/* Styling for the buttons */
+.buttons {
+  display: flex;
+  gap: 20px; /* Space between buttons */
+}
+
+.login-button {
+  padding: 15px 25px;
+  font-size: 1.2rem;
+  font-family: 'Roboto', sans-serif; /* Use Roboto for the button text */
+  font-weight: 600; /* A slightly bolder font weight for better legibility */
+  border: none;
+  border-radius: 8px; /* Rounded corners for a softer look */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Styling for the Log In button */
+.login-button {
+  background-color: white;
+  color: #7baffe; /* Light blue text color */
+}
+
+/* Hover effects for the login button */
+.login-button:hover {
+  transform: scale(1.05); /* Slight zoom-in effect */
+}
+
+/* Active button effects */
+.login-button:active {
+  transform: scale(0.98); /* Slight zoom-out effect on click */
+}
+
+/* Error message styling */
+.error-message {
+  color: red;
+  font-size: 1rem;
+  margin-top: 5px;
+}

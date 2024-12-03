@@ -37,7 +37,7 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-welcome-container">
       <h2>Log In</h2> {/* Page title */}
       <form onSubmit={handleSubmit}> {/* Form submission handler */}
         <div>
@@ -59,8 +59,16 @@ const Login = () => {
           />
         </div>
         {error && <div className="error-message">{error}</div>} {/* Conditionally render error message */}
-        <button type="submit">Login</button> {/* Submit button */}
       </form>
+
+      {/* Separate container for the login button */}
+      <div className="button-container">
+        <div className="buttons">
+          <button className="login-button" onClick={handleSubmit}>
+            Log In
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
