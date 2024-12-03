@@ -1,101 +1,95 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import '../../styles/CreateChat.css';
 
-const CreateChat = ({ userId }) => {
-    const [recipientEmail, setRecipientEmail] = useState("");
-    const [conversation, setConversation] = useState(null);
-    const [messages, setMessages] = useState([]);
-    const [error, setError] = useState("");
+const CreateChat = () => {
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState(null); // State for error messages
+  const navigate = useNavigate();
 
-    const handleRecipientSearchOrCreate = async () => {
-        try {
-            const token = localStorage.getItem("token");
-            if (!token) return console.error("No token found");
+  const handleCreateChat = async () => {
+    setError(null); // Reset error messages
+    try {
+      const token = localStorage.getItem("token");
 
-            // Check or create a conversation with the input email
-            const response = await axios.post(
-                "http://localhost:5001/conversations",
-                { recipientEmail },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+      if (!token) {
+        setError("No token found in local storage. Please log in.");
+        return;
+      }
 
-            setConversation(response.data); // Save the conversation details
-            setError("");
-        } catch (err) {
-            console.error("Error creating or fetching conversation:", err);
-            setError(err.response?.data?.message || "Error creating conversation.");
-        }
-    };
+      // 1. Get the user ID from the email
+      let userIdResponse;
+      try {
+        userIdResponse = await axios.get(`http://localhost:5001/user/id/${email}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (err) {
+        setError("Failed to fetch user ID from email. " + err.response?.data?.message || err.message);
+        return;
+      }
 
-    const fetchMessages = async (conversationId) => {
-        try {
-            const token = localStorage.getItem("token");
-            if (!token) return console.error("No token found");
+      if (!userIdResponse.data?.userID) { //change to .id once backend renames variable
+        setError("No user ID found for the provided email.");
+        return;
+      }
 
-            const response = await axios.get(
-                `http://localhost:5001/messages/${conversationId}`,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+      const userID = userIdResponse.data.userID;
+      console.log("Fetched userID:", userID);
 
-            setMessages(response.data);
-        } catch (err) {
-            console.error("Error fetching messages:", err);
-            setError("Error fetching previous messages.");
-        }
-    };
+      // 2. Get the current user's ID from the token
+      let currentUser;
+      try {
+        currentUser = JSON.parse(atob(token.split(".")[1])).id;
+        console.log("Current user ID:", currentUser);
+      } catch (err) {
+        setError("Error decoding token to fetch current user ID. " + err.message);
+        return;
+      }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError("");
+      // 3. Create or fetch the conversation
+      let conversationResponse;
+      try {
+        conversationResponse = await axios.post(
+          "http://localhost:5001/conversations",
+          { participants: [currentUser, userID] },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      } catch (err) {
+        setError("Failed to create or fetch the conversation. " + err.response?.data?.message || err.message);
+        return;
+      }
 
-        if (!recipientEmail) {
-            setError("Please enter a recipient email.");
-            return;
-        }
+      if (!conversationResponse.data?._id) {
+        setError("Conversation creation succeeded but no conversation ID returned.");
+        return;
+      }
 
-        // Check for or create the conversation
-        await handleRecipientSearchOrCreate();
+      const conversationID = conversationResponse.data._id;
+      console.log("Conversation created or fetched with ID:", conversationID);
 
-        if (conversation?._id) {
-            // Fetch existing messages if the conversation exists
-            await fetchMessages(conversation._id);
-        }
-    };
+      // Redirect to the conversation page
+      navigate(`/conversation/${conversationID}`);
+    } catch (err) {
+      setError("An unexpected error occurred: " + err.message);
+    }
+  };
 
-    return (
-        <div>
-            <h2>Create or Continue a Chat</h2>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="email"
-                    placeholder="Recipient Email"
-                    value={recipientEmail}
-                    onChange={(e) => setRecipientEmail(e.target.value)}
-                    required
-                />
-                <button type="submit">Start Chat</button>
-            </form>
-
-            {error && <p style={{ color: "red" }}>{error}</p>}
-
-            {conversation && (
-                <div>
-                    <h3>Chat with {recipientEmail}</h3>
-                    <div>
-                        {messages.length > 0 ? (
-                            messages.map((message) => (
-                                <p key={message._id}>
-                                    <strong>{message.sender === userId ? "You" : recipientEmail}:</strong> {message.content}
-                                </p>
-                            ))
-                        ) : (
-                            <p>No previous messages.</p>
-                        )}
-                    </div>
-                </div>
-            )}
-        </div>
-    );
+  return (
+    <div className="create-chat">
+      <h1>Create a Chat</h1>
+      <input
+        type="email"
+        placeholder="Enter user's email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <button onClick={handleCreateChat} disabled={!email.trim()}>
+        Start Chat
+      </button>
+      {error && <p className="error-message">{error}</p>}
+    </div>
+  );
 };
 
 export default CreateChat;
