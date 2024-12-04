@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-// import { jwtDecode as jwt_decode } from 'jwt-decode'; // Import jwt-decode to extract user ID
 import { jwtDecode } from 'jwt-decode';
 import '../../styles/RecentMessages.css';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useNavigate } from 'react-router-dom';
+import { io } from 'socket.io-client'; // Import socket.io-client
+
+const socket = io("http://localhost:5001"); // Connect to the Socket.IO server
 
 const RecentMessages = () => {
     const [conversations, setConversations] = useState([]);
@@ -20,17 +22,19 @@ const RecentMessages = () => {
         const fetchConversations = async () => {
             try {
                 if (!token) {
-                    console.error('No token found');
-                    navigate('/login');
+                    console.error("No token found");
+                    navigate("/login");
                     return;
                 }
 
+                // Fetch all conversations
                 const response = await axios.get(`http://localhost:5001/conversations/${userID}`, {
                     headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                        Authorization: `Bearer ${token}`,
+                    },
                 });
 
+                // Fetch names for each participant in conversations
                 const updatedConversations = await Promise.all(response.data.map(async (conversation) => {
                     const participantNames = await Promise.all(conversation.participants.map(async (participantID) => {
                         if (participantID === userID) return 'You';
@@ -43,7 +47,7 @@ const RecentMessages = () => {
                             return participantResponse.data.name;
                         } catch (error) {
                             console.error(`Error fetching name for user ID ${participantID}:`, error);
-                            return participantID;
+                            return participantID; // Fallback to showing the ID in case of error
                         }
                     }));
 
@@ -55,11 +59,45 @@ const RecentMessages = () => {
 
                 setConversations(updatedConversations);
             } catch (error) {
-                console.error('Error fetching conversations:', error);
+                console.error("Error fetching conversations:", error);
             }
         };
 
         fetchConversations();
+
+        // Listen for updates via Socket.IO
+        socket.on("updateConversation", (updatedConversation) => {
+            setConversations((prevConversations) => {
+                // Find existing conversation by ID
+                const existingConversation = prevConversations.find(
+                    (conversation) => conversation._id === updatedConversation.conversationId
+                );
+
+                // Ensure participant names exist
+                const participantNames = existingConversation
+                    ? existingConversation.participantNames // Use existing names if present
+                    : updatedConversation.participants?.map((id) => (id === userID ? "You" : id)) || [];
+
+                // Remove the existing conversation from the list
+                const filteredConversations = prevConversations.filter(
+                    (conversation) => conversation._id !== updatedConversation.conversationId
+                );
+
+                // Merge updated fields and add to the top of the list
+                return [
+                    {
+                        ...existingConversation,
+                        ...updatedConversation,
+                        participantNames,
+                    },
+                    ...filteredConversations,
+                ];
+            });
+        });
+
+        return () => {
+            socket.off("updateConversation");
+        };
     }, [navigate, token, userID]);
 
     const handleCreateNewChat = () => {
@@ -86,6 +124,8 @@ const RecentMessages = () => {
             ) : (
                 conversations.map((conversation) => {
                     const lastMessage = conversation.lastMessage;
+
+                    // Get participant names for display
                     const participantNames = conversation.participantNames.join(', ');
 
                     let messagePreview = '';
@@ -110,7 +150,12 @@ const RecentMessages = () => {
                                 <div className="conversation-last-message">{messagePreview}</div>
                             </div>
                             <div className="conversation-time">
-                                {lastMessage ? new Date(lastMessage.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                                {lastMessage
+                                    ? new Date(lastMessage.timestamp).toLocaleTimeString([], {
+                                          hour: '2-digit',
+                                          minute: '2-digit',
+                                      })
+                                    : ''}
                             </div>
                         </div>
                     );
