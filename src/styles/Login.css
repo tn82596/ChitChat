@@ -44,7 +44,6 @@ input {
   padding: 15px;
   font-size: 1.2rem; /* Same font size as login button */
   font-family: 'Roboto', sans-serif; /* Match the font family */
-  font-weight: 600; /* Match the font weight */
   border: 2px solid #7baffe;
   border-radius: 8px;
   width: 100%; /* Ensures the inputs fill the container width */
@@ -61,7 +60,7 @@ label {
   font-family: 'Roboto', sans-serif;
   font-size: 1.2rem; /* Same font size as login button */
   font-weight: 600; /* Same font weight as login button */
-  color: #7baffe; /* Light blue color to match the login button */
+  color: #7baffe;
   margin-bottom: 5px;
   text-align: left; /* Align the label text to the left */
   width: 100%;
@@ -113,5 +112,4 @@ label {
 .error-message {
   color: red;
   font-size: 1rem;
-  margin-top: 5px;
 }
