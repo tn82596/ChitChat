@@ -7,11 +7,25 @@
     height: 100vh; /* Full viewport height */
     background-color: #f4f4f4; /* Light background color */
   }
+
+  .signup-welcome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers items horizontally (header and form) */
+    justify-content: center;
+    min-height: 100vh;
+    background: radial-gradient(circle, #7baffe, #aec6e9); /* Circular gradient from center */
+    font-family: 'Poppins', sans-serif; /* Changed font to Poppins for the title */
+    text-align: center;
+    background-size: cover; /* Ensure the gradient covers the entire container */
+  }
   
   h2 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    color: #333;
+    font-size: 3rem; /* Increased size for the title */
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: #fff; /* White text for contrast against the gradient */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   }
   
   form {
@@ -20,7 +34,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 400px; /* Maximum width for the form */
+    max-width: 300px; /* Maximum width for the form */
     box-sizing: border-box;
   }
   
@@ -30,9 +44,11 @@
   }
   
   label {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem; /* Same font size as login button */
+    font-weight: 600;
     display: block;
-    font-size: 1rem;
-    color: #555;
+    color: #7baffe;
     margin-bottom: 5px;
   }
   
