@@ -25,7 +25,7 @@ const CreateChat = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
       } catch (err) {
-        setError("Failed to fetch user ID from email. " + err.response?.data?.message || err.message);
+        setError("This email is not registered. Please check your spelling and try again.");
         return;
       }
 
