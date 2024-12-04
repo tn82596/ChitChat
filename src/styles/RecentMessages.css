@@ -1,3 +1,75 @@
+/* Ensure the container fills the entire viewport */
+.message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers the content horizontally */
+  justify-content: flex-start; /* Aligns content at the top */
+  min-height: 100vh; /* Full viewport height */
+  background: radial-gradient(circle, #7baffe, #aec6e9); /* Gradient for the background */
+  padding: 20px;
+  position: relative; /* Needed for absolute positioning of the sign-out button */
+}
+
+/* Title styling */
+.message-title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 10px;
+  margin-top: 60px;
+  text-align: center;
+}
+
+/* Recent chats container */
+.chat-list {
+  width: 100%;
+  max-width: 570px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px; /* Adds space between the chat list and the button */
+  margin-top: 20px;
+}
+
+/* Individual chat item styling */
+.chat-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+}
+
+.chat-item:last-child {
+  border-bottom: none;
+}
+
+/* Button styling */
+.create-chat-button {
+  background-color: white; /* White background */
+  color: #7baffe; /* Text color */
+  font-family: 'Roboto', sans-serif; /* Use Roboto for the button text */
+  font-weight: 600;
+  font-size: 1.2rem;
+  padding: 10px 20px;
+  border: 2px solid #7baffe; /* Optional: Add a border with the same color */
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover effects for the create chat button */
+.create-chat-button:hover {
+  transform: scale(1.05); /* Slight zoom-in effect */
+}
+
+/* Active button effects */
+.create-chat-button:active {
+  transform: scale(0.98); /* Slight zoom-out effect on click */
+}
+
 /* RecentMessages.css */
 .recent-messages {
   display: flex;
@@ -13,10 +85,6 @@
   border-bottom: 1px solid #e0e0e0;
   transition: background-color 0.3s;
   cursor: pointer;
-}
-
-.conversation-item:hover {
-  background-color: #f5f5f5;
 }
 
 .conversation-info {
@@ -51,22 +119,39 @@
   font-size: 16px;
 }
 
-.create-chat-button:hover {
-  background-color: #0056b3;
-}
-
+/* Sign-out button */
 .sign-out-button {
-  align-self: center;
-  margin-top: 20px;
+  position: absolute; /* Absolute positioning to place it at the top right */
+  top: 20px; /* Adjust the distance from the top */
+  right: 20px; /* Adjust the distance from the right */
+  font-family: 'Roboto', sans-serif; /* Use Roboto for the button text */
+  font-weight: 400;
   padding: 10px 20px;
-  background-color: #ff0000; /* Set to red */
+  background-color: rgb(215, 59, 67); /* Set to red */
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
 }
 
 .sign-out-button:hover {
-  background-color: #cc0000; /* Darker red on hover */
+  transform: scale(1.05); /* Darker red on hover */
+}
+
+
+/* Go Back Button */
+.go-back-button {
+  margin-bottom: 20px; /* Add space below the button */
+  padding: 10px 20px;
+  background-color: #dc3545; /* Keeping it red */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.go-back-button:hover {
+  background-color: #c82333; /* Darker red for hover state */
 }

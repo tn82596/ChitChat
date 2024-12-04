@@ -8,7 +8,7 @@ const Home = () => {
     const handleSignup = () => navigate('/signup');
 
     return (
-        <div className="home-container">
+        
             <div className="welcome-container">
                 <div className="logo-container">
                     {/* Replace with the new src path */}
@@ -26,7 +26,7 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        
     );
 };
 

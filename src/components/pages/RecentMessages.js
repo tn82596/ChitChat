@@ -53,7 +53,7 @@ const RecentMessages = () => {
 
                     return {
                         ...conversation,
-                        participantNames
+                        participantNames,
                     };
                 }));
 
@@ -109,58 +109,68 @@ const RecentMessages = () => {
         navigate('/login');
     };
 
+    const handleGoBack = () => {
+        navigate('/login'); // Navigate to the login page
+    };
+
     const handleConversationClick = (convoID) => {
         navigate(`/conversation/${convoID}`);
     };
 
     return (
-        <div className="recent-messages">
-            <h1>Recent Messages</h1>
+        <div className="message-container">
+            <h1 className="message-title">Recent Messages</h1>
+            <button className="go-back-button" onClick={handleGoBack}>
+                Go Back
+            </button>
+
+            <div className="chat-list">
+                {conversations.length === 0 ? (
+                    <p>No conversations found.</p>
+                ) : (
+                    conversations.map((conversation) => {
+                        const lastMessage = conversation.lastMessage;
+
+                        // Get participant names for display
+                        const participantNames = conversation.participantNames.join(', ');
+
+                        // Prepare the preview of the last message
+                        let messagePreview = '';
+                        if (lastMessage) {
+                            if (lastMessage.sender === userID) {
+                                messagePreview = `You: ${lastMessage.content}`;
+                            } else {
+                                messagePreview = lastMessage.content;
+                            }
+                        } else {
+                            messagePreview = 'No messages yet.';
+                        }
+                        return (
+                            <div
+                                key={conversation._id}
+                                className="chat-item"
+                                onClick={() => handleConversationClick(conversation._id)}
+                            >
+                                <div className="conversation-info">
+                                    <div className="conversation-name">{participantNames}</div>
+                                    <div className="conversation-last-message">{messagePreview}</div>
+                                </div>
+                                <div className="conversation-time">
+                                    {lastMessage
+                                        ? new Date(lastMessage.timestamp).toLocaleTimeString([], {
+                                              hour: '2-digit',
+                                              minute: '2-digit',
+                                          })
+                                        : ''}
+                                </div>
+                            </div>
+                        );
+                    })
+                )}
+            </div>
             <button className="create-chat-button" onClick={handleCreateNewChat}>
                 Create New Chat
             </button>
-            {conversations.length === 0 ? (
-                <p>No conversations found.</p>
-            ) : (
-                conversations.map((conversation) => {
-                    const lastMessage = conversation.lastMessage;
-
-                    // Get participant names for display
-                    const participantNames = conversation.participantNames.join(', ');
-
-                    let messagePreview = '';
-                    if (lastMessage) {
-                        if (lastMessage.sender === userID) {
-                            messagePreview = `You: ${lastMessage.content}`;
-                        } else {
-                            messagePreview = lastMessage.content;
-                        }
-                    } else {
-                        messagePreview = "No messages yet.";
-                    }
-
-                    return (
-                        <div
-                            key={conversation._id}
-                            className="conversation-item"
-                            onClick={() => handleConversationClick(conversation._id)}
-                        >
-                            <div className="conversation-info">
-                                <div className="conversation-name">{participantNames}</div>
-                                <div className="conversation-last-message">{messagePreview}</div>
-                            </div>
-                            <div className="conversation-time">
-                                {lastMessage
-                                    ? new Date(lastMessage.timestamp).toLocaleTimeString([], {
-                                          hour: '2-digit',
-                                          minute: '2-digit',
-                                      })
-                                    : ''}
-                            </div>
-                        </div>
-                    );
-                })
-            )}
             <button className="sign-out-button" onClick={handleSignOut}>
                 Sign Out
             </button>

@@ -32,8 +32,14 @@ const Signup = () => {
     }
   };
 
+  // Handle Go Back button click
+  const handleGoBack = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+  };
+
   return (
-    <div className="signup-container">
+    <div className="signup-welcome-container">
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -64,8 +70,18 @@ const Signup = () => {
           />
         </div>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit">Sign Up</button>
       </form>
+
+      <div className="button-container">
+        <div className="buttons">
+          <button className="signup-button" onClick={handleSubmit}>
+            Sign Up
+          </button>
+          <button className="go-back-button" onClick={handleGoBack}>
+            Go Back
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
