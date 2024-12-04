@@ -42,8 +42,15 @@ io.on("connection", (socket) => {
 
   // Listen for new messages and broadcast them to other users in the conversation
   socket.on("sendMessage", (message) => {
-    // Broadcast the message to all users in the same conversation
+    // Notify all users in the conversation about the new message
     socket.to(message.conversationId).emit("receiveMessage", message);
+  
+    // Notify the RecentMessages page about the updated conversation
+    io.emit("updateConversation", {
+      conversationId: message.conversationId,
+      lastMessage: message, // Pass the last message data
+      updatedAt: new Date(), // The updated timestamp
+    });
   });
 
   // Join a specific conversation to listen for updates
