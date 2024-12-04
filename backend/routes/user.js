@@ -94,7 +94,7 @@ router.get("/id/:email", verifyToken, async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        res.status(200).json({ userID: user._id });
+        res.status(200).json({ id: user._id });
     } catch (err) {
         console.error("Error fetching user:", err);
         res.status(500).json({ message: "Error fetching user", error: err.message });
