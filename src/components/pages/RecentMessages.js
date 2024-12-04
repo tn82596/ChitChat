@@ -12,7 +12,7 @@ const RecentMessages = () => {
 
     if (token) {
         const decodedToken = jwtDecode(token);
-        userID = decodedToken.id; // Extract the user ID from the token
+        userID = decodedToken.id;
     }
 
     useEffect(() => {
@@ -24,38 +24,27 @@ const RecentMessages = () => {
                     return;
                 }
 
-                // Fetch all conversations
                 const response = await axios.get(`http://localhost:5001/conversations/${userID}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
 
-                // Fetch names for each participant in conversations
-                const updatedConversations = await Promise.all(
-                    response.data.map(async (conversation) => {
-                        const participantNames = await Promise.all(
-                            conversation.participants.map(async (participantID) => {
-                                if (participantID === userID) return 'You';
-                                try {
-                                    const participantResponse = await axios.get(
-                                        `http://localhost:5001/user/name/${participantID}`,
-                                        {
-                                            headers: {
-                                                Authorization: `Bearer ${token}`,
-                                            },
-                                        }
-                                    );
-                                    return participantResponse.data.name;
-                                } catch (error) {
-                                    console.error(
-                                        `Error fetching name for user ID ${participantID}:`,
-                                        error
-                                    );
-                                    return participantID; // Fallback to showing the ID in case of error
+                const updatedConversations = await Promise.all(response.data.map(async (conversation) => {
+                    const participantNames = await Promise.all(conversation.participants.map(async (participantID) => {
+                        if (participantID === userID) return 'You';
+                        try {
+                            const participantResponse = await axios.get(`http://localhost:5001/user/name/${participantID}`, {
+                                headers: {
+                                    Authorization: `Bearer ${token}`
                                 }
-                            })
-                        );
+                            });
+                            return participantResponse.data.name;
+                        } catch (error) {
+                            console.error(`Error fetching name for user ID ${participantID}:`, error);
+                            return participantID;
+                        }
+                    }));
 
                         return {
                             ...conversation,
@@ -73,12 +62,15 @@ const RecentMessages = () => {
         fetchConversations();
     }, [navigate, token, userID]);
 
-    // Handle click to create a new chat
     const handleCreateNewChat = () => {
         navigate('/create-chat');
     };
 
-    // Handle click on a conversation
+    const handleSignOut = () => {
+        localStorage.removeItem('token');
+        navigate('/login');
+    };
+
     const handleConversationClick = (convoID) => {
         navigate(`/conversation/${convoID}`);
     };
@@ -134,9 +126,11 @@ const RecentMessages = () => {
             <button className="login-button" onClick={handleCreateNewChat}>
                 Create New Chat
             </button>
+            <button className="sign-out-button" onClick={handleSignOut}>
+                Sign Out
+            </button>
         </div>
     );
-    
 };
 
 export default RecentMessages;
