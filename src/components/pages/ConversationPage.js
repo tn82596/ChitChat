@@ -115,7 +115,7 @@ const ConversationPage = () => {
 
   return (
     <div className="conversation-page">
-      <h1 className="conversation-title">Conversation</h1>
+      <h2 className="conversation-title">Conversation</h2>
 
       {/* Go Back Button */}
       <button
