@@ -127,8 +127,8 @@
   font-family: 'Roboto', sans-serif; /* Use Roboto for the button text */
   font-weight: 400;
   padding: 10px 20px;
-  background-color: #ffffff; /* Set to red */
-  color: rgb(241, 86, 86);
+  background-color: rgb(205, 46, 54); /* Set to red */
+  color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;

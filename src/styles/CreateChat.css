@@ -49,16 +49,18 @@
 }
 
 .go-back-button {
-  position: absolute; /* Position Go Back button absolutely */
-  top: 1rem; /* Align it to the top */
-  left: 1rem; /* Align it to the left */
-  background-color: white; /* White background */
-  color: rgb(241, 86, 86); /* Red text color */
+  position: absolute; /* Absolute positioning to place it at the top right */
+  top: 20px; /* Adjust the distance from the top */
+  left: 20px; /* Adjust the distance from the right */
+  font-family: 'Roboto', sans-serif; /* Use Roboto for the button text */
+  font-weight: 400;
+  padding: 10px 20px;
+  background-color: rgb(241, 86, 86); /* Set to red */
+  color: white;
   border: none;
   border-radius: 8px;
-  padding: 10px 15px;
-  font-family: 'Roboto', sans-serif;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .go-back-button:hover {
