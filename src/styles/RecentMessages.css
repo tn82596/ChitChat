@@ -1,56 +1,72 @@
 /* RecentMessages.css */
 .recent-messages {
-    display: flex;
-    flex-direction: column;
-    margin: 20px;
-  }
-  
-  .conversation-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #e0e0e0;
-    transition: background-color 0.3s;
-    cursor: pointer;
-  }
-  
-  .conversation-item:hover {
-    background-color: #f5f5f5;
-  }
-  
-  .conversation-info {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .conversation-name {
-    font-weight: bold;
-    font-size: 1rem;
-    color: #333;
-  }
-  
-  .conversation-last-message {
-    font-size: 0.9rem;
-    color: #777;
-  }
-  
-  .conversation-time {
-    font-size: 0.8rem;
-    color: #aaa;
-  }
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+}
 
-  .create-chat-button {
-    margin-bottom: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .create-chat-button:hover {
-    background-color: #0056b3;
-  }
+.conversation-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.conversation-item:hover {
+  background-color: #f5f5f5;
+}
+
+.conversation-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.conversation-name {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #333;
+}
+
+.conversation-last-message {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.conversation-time {
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+.create-chat-button {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.create-chat-button:hover {
+  background-color: #0056b3;
+}
+
+.sign-out-button {
+  align-self: center;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #ff0000; /* Set to red */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.sign-out-button:hover {
+  background-color: #cc0000; /* Darker red on hover */
+}
