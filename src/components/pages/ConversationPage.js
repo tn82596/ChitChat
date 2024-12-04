@@ -14,6 +14,9 @@ const ConversationPage = () => {
   const [newMessage, setNewMessage] = useState('');
   const [userID, setUserID] = useState(null);
   const [userNames, setUserNames] = useState({}); // Store sender names here
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -105,6 +108,33 @@ const ConversationPage = () => {
     }
   };
 
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+
+    try {
+      setIsSearching(true);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
+      const response = await axios.get(
+        `http://localhost:5001/messages/search/${convoID}?query=${encodeURIComponent(searchQuery)}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setSearchResults(response.data); // Update with search results
+    } catch (error) {
+      console.error('Error searching messages:', error);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
   const handleSignOut = () => {
     localStorage.removeItem('token'); // Remove the token
     navigate('/login'); // Redirect to the login page
@@ -128,10 +158,39 @@ const ConversationPage = () => {
         Go Back
       </button>
 
+      {/* Search Bar */}
+      <div className="search-container">
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search messages..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button className="search-button" onClick={handleSearch} disabled={isSearching}>
+          {isSearching ? 'Searching...' : 'Search'}
+        </button>
+      </div>
+
       {/* Messages */}
       <div className="messages-container">
-        {messages.length === 0 ? (
-          <p>No messages in this conversation.</p>
+        {isSearching ? (
+          <p>Searching...</p>
+        ) : searchResults.length > 0 ? (
+          <div className="messages-list">
+            <h3>Search Results</h3>
+            {searchResults.map((message) => (
+              <div key={message._id} className={`message-item ${message.sender === userID ? 'sent' : 'received'}`}>
+                <div className={`message-sender ${message.sender === userID ? 'sent-name' : 'received-name'}`}>
+                  {userNames[message.sender]}
+                </div>
+                <div className="message-content">{message.content}</div>
+                <div className="message-timestamp">
+                  {new Date(message.timestamp).toLocaleString()}
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (
           <div className="messages-list">
             {messages.map((message) => (
