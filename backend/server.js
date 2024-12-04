@@ -38,7 +38,6 @@ app.use("/messages", messageRoutes);
 
 // Socket.IO: Handle real-time messaging
 io.on("connection", (socket) => {
-  console.log("New client connected");
 
   // Listen for new messages and broadcast them to other users in the conversation
   socket.on("sendMessage", (message) => {
@@ -60,7 +59,6 @@ io.on("connection", (socket) => {
 
   // Handle disconnection
   socket.on("disconnect", () => {
-    console.log("Client disconnected");
   });
 });
 

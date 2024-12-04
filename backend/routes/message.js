@@ -49,4 +49,37 @@ router.get("/:conversationId", verifyToken, async (req, res) => {
     }
   });
 
+// Search for messages by keyword in a specific conversation
+router.get("/search/:conversationId", async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    const { query } = req.query; // Get the query string from the URL
+
+    // Validate the query parameter
+    if (!query) {
+      return res.status(400).json({ message: "Query parameter is required" });
+    }
+
+    // Find messages in the conversation that match the query
+    const messages = await Message.find({
+      conversationId: conversationId,  // Ensure the message belongs to the conversation
+      content: { $regex: query, $options: "i" }, // Case-insensitive search
+    })
+      .sort({ timestamp: -1 }) // Sort by timestamp, most recent first
+      .exec();
+
+    // If no messages were found
+    if (messages.length === 0) {
+      return res.status(404).json({ message: "No messages found matching the search." });
+    }
+
+    // Return the matching messages
+    return res.status(200).json(messages);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "An error occurred while searching for messages." });
+  }
+});
+
+module.exports = router;
 module.exports = router;
