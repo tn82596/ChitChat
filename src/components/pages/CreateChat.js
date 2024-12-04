@@ -120,12 +120,12 @@ const CreateChat = () => {
         return;
       }
 
-      if (!userIdResponse.data?.userID) { //change to .id once backend renames variable
+      if (!userIdResponse.data?.id) { //change to .id once backend renames variable
         setError("No user ID found for the provided email.");
         return;
       }
 
-      const userID = userIdResponse.data.userID;
+      const userID = userIdResponse.data.id;
       console.log("Fetched userID:", userID);
 
       // 2. Get the current user's ID from the token
