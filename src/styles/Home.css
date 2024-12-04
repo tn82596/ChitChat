@@ -1,25 +1,34 @@
-/* Importing Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;700&display=swap');
+/* General styles for full-page layout */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Prevent scrollbars */
+}
 
 /* Main container for centering content */
 .home-container {
-  text-align: center;
-  margin-top: 20%;
-  font-family: 'Roboto', sans-serif; /* Changed font to Roboto for the overall body text */
-}
-
-/* Welcome container with radial gradient in the center */
-.welcome-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  background: radial-gradient(circle, #7baffe, #aec6e9); /* Circular gradient from center */
-  font-family: 'Poppins', sans-serif; /* Changed font to Poppins for the title */
-  padding: 20px;
+  width: 100%; /* Ensure full width */
+  height: 100%; /* Ensure full height */
   text-align: center;
-  background-size: cover; /* Ensure the gradient covers the entire container */
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Welcome container with radial gradient */
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers the content horizontally */
+  justify-content: center; /* Aligns content vertically in the center */
+  min-height: 100vh; /* Full viewport height */
+  background: radial-gradient(circle, #7baffe, #aec6e9); /* Gradient for the background */
+  padding: 20px;
+  position: relative;
 }
 
 /* Title styling */
@@ -28,7 +37,33 @@
   font-weight: 600; /* A bit lighter than bold for a more modern look */
   margin-bottom: 30px;
   color: #fff; /* White text for contrast against the gradient */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Optional: Adds a slight shadow to make the title pop */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Adds a slight shadow to make the title pop */
+}
+
+/* Container for logo and title */
+.logo-container {
+  display: flex;
+  align-items: center; /* Align logo and title vertically */
+  flex-direction: row; /* Place logo and title side-by-side */
+  gap: 20px; /* Space between logo and title */
+}
+
+/* Logo styling */
+.logo {
+  width: 70px; /* Adjust logo size */
+  height: auto; /* Maintain aspect ratio */
+  margin: 0; /* Remove extra margins */
+  padding: 0;
+  border-radius: 8px;
+  margin-top: 25px;
+}
+
+/* Title styling next to the logo */
+.logo-title {
+  font-size: 3.5rem; /* Adjust size for better alignment with the logo */
+  font-weight: 600; /* Ensure it has enough visual weight next to the logo */
+  color: #fff; /* Match color with the gradient theme */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Subtle shadow for better visibility */
 }
 
 /* Container for the buttons */
@@ -77,19 +112,4 @@
 /* Active button effects */
 .login-button:active, .signup-button:active {
   transform: scale(0.98); /* Slight zoom-out effect on click */
-}
-
-/* Container for logo and title */
-.logo-container {
-  display: flex;
-  align-items: center; /* Align items vertically in the center */
-  gap: 20px; /* Space between logo and title */
-}
-
-/* Logo styling */
-.logo {
-  border-radius: 8px;
-  width: 80px;  /* Smaller width for the logo */
-  height: auto;  /* Maintain aspect ratio */
-  margin-top: 25px;
 }
