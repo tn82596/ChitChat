@@ -72,3 +72,24 @@
   color: red;
   margin-top: 1rem;
 }
+
+
+/* Sign-out button */
+.sign-out-button {
+  position: absolute; /* Absolute positioning to place it at the top right */
+  top: 20px; /* Adjust the distance from the top */
+  right: 20px; /* Adjust the distance from the right */
+  font-family: 'Roboto', sans-serif; /* Use Roboto for the button text */
+  font-weight: 400;
+  padding: 10px 20px;
+  background-color: rgb(215, 59, 67); /* Set to red */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.sign-out-button:hover {
+  transform: scale(1.05); /* Darker red on hover */
+}

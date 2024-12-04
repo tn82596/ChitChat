@@ -36,6 +36,12 @@ const Login = () => {
     }
   };
 
+  // Handle Go Back button click
+  const handleGoBack = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+  };
+
   return (
     <div className="login-welcome-container">
       <h2>Log In</h2> {/* Page title */}
@@ -61,11 +67,14 @@ const Login = () => {
         {error && <div className="error-message">{error}</div>} {/* Conditionally render error message */}
       </form>
 
-      {/* Separate container for the login button */}
+      {/* Separate container for buttons */}
       <div className="button-container">
         <div className="buttons">
           <button className="login-button" onClick={handleSubmit}>
             Log In
+          </button>
+          <button className="go-back-button" onClick={handleGoBack}>
+            Go Back
           </button>
         </div>
       </div>

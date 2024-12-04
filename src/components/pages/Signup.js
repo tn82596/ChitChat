@@ -32,6 +32,12 @@ const Signup = () => {
     }
   };
 
+  // Handle Go Back button click
+  const handleGoBack = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+  };
+
   return (
     <div className="signup-welcome-container">
       <h2>Sign Up</h2>
@@ -70,6 +76,9 @@ const Signup = () => {
         <div className="buttons">
           <button className="signup-button" onClick={handleSubmit}>
             Sign Up
+          </button>
+          <button className="go-back-button" onClick={handleGoBack}>
+            Go Back
           </button>
         </div>
       </div>

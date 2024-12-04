@@ -46,12 +46,11 @@ const RecentMessages = () => {
                         }
                     }));
 
-                        return {
-                            ...conversation,
-                            participantNames,
-                        };
-                    })
-                );
+                    return {
+                        ...conversation,
+                        participantNames,
+                    };
+                }));
 
                 setConversations(updatedConversations);
             } catch (error) {
@@ -71,6 +70,10 @@ const RecentMessages = () => {
         navigate('/login');
     };
 
+    const handleGoBack = () => {
+        navigate('/login'); // Navigate to the login page
+    };
+
     const handleConversationClick = (convoID) => {
         navigate(`/conversation/${convoID}`);
     };
@@ -78,16 +81,19 @@ const RecentMessages = () => {
     return (
         <div className="message-container">
             <h1 className="message-title">Recent Messages</h1>
+            <button className="go-back-button" onClick={handleGoBack}>
+                Go Back
+            </button>
             <div className="chat-list">
                 {conversations.length === 0 ? (
                     <p>No conversations found.</p>
                 ) : (
                     conversations.map((conversation) => {
                         const lastMessage = conversation.lastMessage;
-    
+
                         // Get participant names for display
                         const participantNames = conversation.participantNames.join(', ');
-    
+
                         // Prepare the preview of the last message
                         let messagePreview = '';
                         if (lastMessage) {
@@ -99,7 +105,7 @@ const RecentMessages = () => {
                         } else {
                             messagePreview = 'No messages yet.';
                         }
-    
+
                         return (
                             <div
                                 key={conversation._id}
@@ -123,7 +129,7 @@ const RecentMessages = () => {
                     })
                 )}
             </div>
-            <button className="login-button" onClick={handleCreateNewChat}>
+            <button className="create-chat-button" onClick={handleCreateNewChat}>
                 Create New Chat
             </button>
             <button className="sign-out-button" onClick={handleSignOut}>

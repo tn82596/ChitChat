@@ -127,7 +127,7 @@
   font-family: 'Roboto', sans-serif; /* Use Roboto for the button text */
   font-weight: 400;
   padding: 10px 20px;
-  background-color: rgb(205, 46, 54); /* Set to red */
+  background-color: rgb(215, 59, 67); /* Set to red */
   color: white;
   border: none;
   border-radius: 8px;
@@ -137,4 +137,21 @@
 
 .sign-out-button:hover {
   transform: scale(1.05); /* Darker red on hover */
+}
+
+
+/* Go Back Button */
+.go-back-button {
+  margin-bottom: 20px; /* Add space below the button */
+  padding: 10px 20px;
+  background-color: #dc3545; /* Keeping it red */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.go-back-button:hover {
+  background-color: #c82333; /* Darker red for hover state */
 }

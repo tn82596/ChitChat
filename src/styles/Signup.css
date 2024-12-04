@@ -107,3 +107,18 @@
     border-color: #007BFF;
   }
   
+  /* Go Back Button */
+.go-back-button {
+  margin-bottom: 20px; /* Add space below the button */
+  padding: 10px 20px;
+  background-color: #dc3545; /* Keeping it red */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.go-back-button:hover {
+  background-color: #c82333; /* Darker red for hover state */
+}

@@ -76,6 +76,11 @@ const CreateChat = () => {
     navigate("/recent-messages");
   };
 
+  const handleSignOut = () => {
+    localStorage.clear(); // Clear the local storage
+    navigate("/login"); // Navigate back to the login page
+  };
+
   return (
     <div className="create-chat">
       <h2>Create a Chat</h2>
@@ -95,6 +100,9 @@ const CreateChat = () => {
       </button>
       <button className="go-back-button" onClick={handleGoBack}>
         Go Back
+      </button>
+      <button className="sign-out-button" onClick={handleSignOut}>
+        Sign Out
       </button>
       {error && <p className="error-message">{error}</p>}
     </div>
