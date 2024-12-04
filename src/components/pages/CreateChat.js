@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import '../../styles/CreateChat.css';
+import "../../styles/CreateChat.css";
 
 const CreateChat = () => {
   const [email, setEmail] = useState("");
@@ -21,27 +21,31 @@ const CreateChat = () => {
       // 1. Get the user ID from the email
       let userIdResponse;
       try {
-        userIdResponse = await axios.get(`http://localhost:5001/user/id/${email}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        userIdResponse = await axios.get(
+          `http://localhost:5001/user/id/${email}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
       } catch (err) {
-        setError("Failed to fetch user ID from email. " + err.response?.data?.message || err.message);
+        setError(
+          "Failed to fetch user ID from email. " +
+            (err.response?.data?.message || err.message)
+        );
         return;
       }
 
-      if (!userIdResponse.data?.userID) { //change to .id once backend renames variable
+      if (!userIdResponse.data?.userID) {
         setError("No user ID found for the provided email.");
         return;
       }
 
       const userID = userIdResponse.data.userID;
-      console.log("Fetched userID:", userID);
 
       // 2. Get the current user's ID from the token
       let currentUser;
       try {
         currentUser = JSON.parse(atob(token.split(".")[1])).id;
-        console.log("Current user ID:", currentUser);
       } catch (err) {
         setError("Error decoding token to fetch current user ID. " + err.message);
         return;
@@ -56,17 +60,21 @@ const CreateChat = () => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
       } catch (err) {
-        setError("Failed to create or fetch the conversation. " + err.response?.data?.message || err.message);
+        setError(
+          "Failed to create or fetch the conversation. " +
+            (err.response?.data?.message || err.message)
+        );
         return;
       }
 
       if (!conversationResponse.data?._id) {
-        setError("Conversation creation succeeded but no conversation ID returned.");
+        setError(
+          "Conversation creation succeeded but no conversation ID returned."
+        );
         return;
       }
 
       const conversationID = conversationResponse.data._id;
-      console.log("Conversation created or fetched with ID:", conversationID);
 
       // Redirect to the conversation page
       navigate(`/conversation/${conversationID}`);
@@ -77,14 +85,19 @@ const CreateChat = () => {
 
   return (
     <div className="create-chat">
-      <h1>Create a Chat</h1>
+      <h2>Create a Chat</h2>
       <input
+        className="create-chat-input"
         type="email"
         placeholder="Enter user's email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <button onClick={handleCreateChat} disabled={!email.trim()}>
+      <button
+        className="create-chat-button"
+        onClick={handleCreateChat}
+        disabled={!email.trim()}
+      >
         Start Chat
       </button>
       {error && <p className="error-message">{error}</p>}
