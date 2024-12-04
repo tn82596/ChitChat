@@ -1,32 +1,62 @@
+/* CreateChat.css */
+
 .create-chat {
-    text-align: center;
-    margin: 2rem auto;
-    max-width: 400px;
-  }
-  
-  .create-chat-input {
-    width: 100%;
-    padding: 0.5rem;
-    margin: 1rem 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .create-chat-button {
-    padding: 0.5rem 1rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .create-chat-button:disabled {
-    background-color: #ccc;
-  }
-  
-  .error-message {
-    color: red;
-    margin-top: 1rem;
-  }
-  
+  text-align: center;
+  margin: 2rem auto;
+  max-width: 400px;
+}
+
+.create-chat-input {
+  width: 100%;
+  padding: 0.5rem;
+  margin: 1rem 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* Space between buttons */
+  margin-top: 1rem;
+}
+
+.create-chat-button {
+  padding: 0.5rem 1rem;
+  background-color: #28a745; /* Updated to green for differentiation */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth color transition */
+  flex: 1;
+}
+
+.create-chat-button:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+.create-chat-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: red;
+  margin-top: 1rem;
+}
+
+.go-back-button {
+  padding: 0.5rem 1rem;
+  background-color: #dc3545; /* Red color for the "Go Back" button */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth color transition */
+  flex: 1;
+}
+
+.go-back-button:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
