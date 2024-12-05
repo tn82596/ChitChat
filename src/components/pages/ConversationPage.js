@@ -13,7 +13,7 @@ const ConversationPage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [userID, setUserID] = useState(null);
-  const [userNames, setUserNames] = useState({}); // Store sender names here
+  const [userNames, setUserNames] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -108,6 +108,25 @@ const ConversationPage = () => {
     }
   };
 
+  const handleDeleteMessage = async (messageID) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
+      await axios.delete(`http://localhost:5001/messages/${messageID}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setMessages((prevMessages) => prevMessages.filter((message) => message._id !== messageID));
+      setSearchResults((prevResults) => prevResults.filter((message) => message._id !== messageID));
+    } catch (error) {
+      console.error('Error deleting message:', error);
+    }
+  };
+
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
 
@@ -126,7 +145,7 @@ const ConversationPage = () => {
         }
       );
 
-      setSearchResults(response.data); // Update with search results
+      setSearchResults(response.data);
     } catch (error) {
       console.error('Error searching messages:', error);
       setSearchResults([]);
@@ -136,8 +155,8 @@ const ConversationPage = () => {
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem('token'); // Remove the token
-    navigate('/login'); // Redirect to the login page
+    localStorage.removeItem('token');
+    navigate('/login');
   };
 
   const scrollToBottom = () => {
@@ -146,19 +165,16 @@ const ConversationPage = () => {
 
   return (
     <div className="conversation-page">
-      {/* Sign-Out Button */}
       <button className="sign-out-button" onClick={handleSignOut}>
         Sign Out
       </button>
 
       <h2 className="conversation-title">Conversation</h2>
 
-      {/* Go Back Button */}
       <button className="go-back-button" onClick={() => navigate('/recent-messages')}>
         Go Back
       </button>
 
-      {/* Search Bar */}
       <div className="search-container">
         <input
           type="text"
@@ -172,7 +188,6 @@ const ConversationPage = () => {
         </button>
       </div>
 
-      {/* Messages */}
       <div className="messages-container">
         {isSearching ? (
           <p>Searching...</p>
@@ -184,7 +199,17 @@ const ConversationPage = () => {
                 <div className={`message-sender ${message.sender === userID ? 'sent-name' : 'received-name'}`}>
                   {userNames[message.sender]}
                 </div>
-                <div className="message-content">{message.content}</div>
+                <div className="message-content">
+                  {message.content}
+                  {message.sender === userID && (
+                    <button
+                      className="delete-button"
+                      onClick={() => handleDeleteMessage(message._id)}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
                 <div className="message-timestamp">
                   {new Date(message.timestamp).toLocaleString()}
                 </div>
@@ -198,7 +223,17 @@ const ConversationPage = () => {
                 <div className={`message-sender ${message.sender === userID ? 'sent-name' : 'received-name'}`}>
                   {userNames[message.sender]}
                 </div>
-                <div className="message-content">{message.content}</div>
+                <div className="message-content">
+                  {message.content}
+                  {message.sender === userID && (
+                    <button
+                      className="delete-button"
+                      onClick={() => handleDeleteMessage(message._id)}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
                 <div className="message-timestamp">
                   {new Date(message.timestamp).toLocaleString()}
                 </div>
