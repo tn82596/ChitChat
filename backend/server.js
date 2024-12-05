@@ -47,9 +47,13 @@ io.on("connection", (socket) => {
     // Notify the RecentMessages page about the updated conversation
     io.emit("updateConversation", {
       conversationId: message.conversationId,
-      lastMessage: message, // Pass the last message data
-      updatedAt: new Date(), // The updated timestamp
+      lastMessage: message,
+      updatedAt: new Date(),
     });
+  });
+
+  socket.on("deleteMessage", (messageID, conversationId) => {
+    socket.to(conversationId).emit("deleteMessage", messageID);
   });
 
   // Join a specific conversation to listen for updates
