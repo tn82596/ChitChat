@@ -5,7 +5,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client'; // Import Socket.IO client
 import '../../styles/ConversationPage.css';
 
-
 const socket = io("http://localhost:5001"); // Connect to the backend
 
 const ConversationPage = () => {
@@ -21,69 +20,65 @@ const ConversationPage = () => {
   const [contextMenu, setContextMenu] = useState(null); // To store the message's context menu position
   const messagesEndRef = useRef(null);
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          console.error('No token found');
-          return;
-        }
-
-        const decodedToken = jwtDecode(token);
-        setUserID(decodedToken.id);
-
-        const response = await axios.get(`http://localhost:5001/messages/${convoID}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        const sortedMessages = response.data.sort(
-          (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
-        );
-
-        setMessages(sortedMessages);
-        scrollToBottom();
-
-        const uniqueSenderIDs = [...new Set(sortedMessages.map((msg) => msg.sender))];
-        const fetchedNames = {};
-        await Promise.all(
-          uniqueSenderIDs.map(async (senderID) => {
-            if (senderID !== decodedToken.id) {
-              const response = await axios.get(`http://localhost:5001/user/name/${senderID}`, {
-                headers: { Authorization: `Bearer ${token}` },
-              });
-              fetchedNames[senderID] = response.data.name;
-            } else {
-              fetchedNames[senderID] = 'You';
-            }
-          })
-        );
-        setUserNames(fetchedNames);
-      } catch (error) {
-        console.error('Error fetching messages:', error);
+  // Fetch messages when conversation is selected
+  const fetchMessages = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
       }
-    };
 
+      const decodedToken = jwtDecode(token);
+      setUserID(decodedToken.id);
+
+      const response = await axios.get(`http://localhost:5001/messages/${convoID}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const sortedMessages = response.data.sort(
+        (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+      );
+
+      setMessages(sortedMessages);
+
+      // Get unique senders for name fetching
+      const uniqueSenderIDs = [...new Set(sortedMessages.map((msg) => msg.sender))];
+      const fetchedNames = {};
+      await Promise.all(
+        uniqueSenderIDs.map(async (senderID) => {
+          if (senderID !== decodedToken.id) {
+            const response = await axios.get(`http://localhost:5001/user/name/${senderID}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            fetchedNames[senderID] = response.data.name;
+          } else {
+            fetchedNames[senderID] = 'You';
+          }
+        })
+      );
+      setUserNames(fetchedNames);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
+
+  useEffect(() => {
     if (convoID) {
-      fetchMessages();
-      socket.emit("joinConversation", convoID);
+      fetchMessages();  // Fetch messages on first load
+      scrollToBottom();
+
+      socket.emit("joinConversation", convoID);  // Join the conversation on socket
+
+      // Listen for conversation updates 
+      socket.on("updateConversation", () => {
+        fetchMessages(); 
+      });
+
     }
 
-    socket.on("receiveMessage", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-      scrollToBottom();
-    });
-
-    socket.on("deleteMessage", (messageID) => {
-      // Remove the deleted message from both the messages and search results states
-      setMessages((prevMessages) => prevMessages.filter((message) => message._id !== messageID));
-      setSearchResults((prevResults) => prevResults.filter((message) => message._id !== messageID));
-      console.log(`Message with ID ${messageID} deleted`);
-    });
-
     return () => {
-      socket.off("receiveMessage");
-      socket.off("deleteMessage");
+      socket.off("updateConversation");
     };
   }, [convoID]);
 
@@ -108,9 +103,8 @@ const ConversationPage = () => {
 
       const message = response.data;
 
-      socket.emit("sendMessage", message);
+      socket.emit("conversationUpdated", message.conversationId);  // Emit the message to others in the conversation
 
-      setMessages((prevMessages) => [...prevMessages, message]);
       setNewMessage('');
       scrollToBottom();
     } catch (error) {
@@ -130,16 +124,14 @@ const ConversationPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      socket.emit("deleteMessage", messageID, convoID);
-
-      setMessages((prevMessages) => prevMessages.filter((message) => message._id !== messageID));
-      setSearchResults((prevResults) => prevResults.filter((message) => message._id !== messageID));
+      socket.emit("conversationUpdated", convoID);  // Emit the message deletion
       setContextMenu(null); // Close the context menu after deletion
       console.log("Message deleted");
     } catch (error) {
       console.error('Error deleting message:', error.response ? error.response.data : error);
     }
   };
+
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
@@ -189,19 +181,19 @@ const ConversationPage = () => {
   const closeContextMenu = () => {
     setContextMenu(null);
   };
-
+  
   return (
     <div className="conversation-page" onClick={closeContextMenu}>
       <button className="sign-out-button" onClick={handleSignOut}>
         Sign Out
       </button>
-
+  
       <h2 className="conversation-title">Conversation</h2>
-
+  
       <button className="go-back-button" onClick={() => navigate('/recent-messages')}>
         Go Back
       </button>
-
+  
       <div className="search-container">
         <input
           type="text"
@@ -214,22 +206,19 @@ const ConversationPage = () => {
           {isSearching ? 'Searching...' : 'Search'}
         </button>
       </div>
-
-
-
+  
       <div className="messages-container">
         {isSearching ? (
           <p>Searching...</p>
         ) : searchResults.length > 0 ? (
-
           <div className="search-results">
             <h3 className="search-title">Search Results</h3>
             {searchResults.map((message) => (
               <div
                 key={message._id}
                 className="search-message-item"
-                onClick={() => navigate(`/search/${message._id}`)} // Add this to navigate to the SearchPage
-                style={{ cursor: 'pointer' }} // Make it look clickable
+                onClick={() => navigate(`/search/${message._id}`)} // Navigate to search page
+                style={{ cursor: 'pointer' }}
               >
                 <div className="search-message-header">
                   <span className="search-message-sender">{userNames[message.sender]}</span>
@@ -244,27 +233,19 @@ const ConversationPage = () => {
               </div>
             ))}
           </div>
-          
-          
-
         ) : (
           <div className="messages-list">
-            {/* Original conversation messages are displayed here */}
             {messages.map((message) => (
-              <div key={message._id} className={`message-item ${message.sender === userID ? 'sent' : 'received'}`}>
+              <div
+                key={message._id}
+                className={`message-item ${message.sender === userID ? 'sent' : 'received'}`}
+                onContextMenu={(e) => handleContextMenu(e, message._id)}
+              >
                 <div className={`message-sender ${message.sender === userID ? 'sent-name' : 'received-name'}`}>
                   {userNames[message.sender]}
                 </div>
                 <div className="message-content">
                   {message.content}
-                  {message.sender === userID && (
-                    <button
-                      className="delete-button"
-                      onClick={() => handleDeleteMessage(message._id)}
-                    >
-                      Delete
-                    </button>
-                  )}
                 </div>
                 <div className="message-timestamp">
                   {new Date(message.timestamp).toLocaleString()}
@@ -275,9 +256,7 @@ const ConversationPage = () => {
           </div>
         )}
       </div>
-
-
-
+  
       {/* Delete Button context menu */}
       {contextMenu && (
         <div
@@ -288,7 +267,7 @@ const ConversationPage = () => {
           <button>Delete</button>
         </div>
       )}
-
+  
       {/* Message Input */}
       <div className="message-input-container">
         <textarea
