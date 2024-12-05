@@ -74,8 +74,16 @@ const ConversationPage = () => {
       scrollToBottom();
     });
 
+    socket.on("deleteMessage", (messageID) => {
+      // Remove the deleted message from both the messages and search results states
+      setMessages((prevMessages) => prevMessages.filter((message) => message._id !== messageID));
+      setSearchResults((prevResults) => prevResults.filter((message) => message._id !== messageID));
+      console.log(`Message with ID ${messageID} deleted`);
+    });
+
     return () => {
       socket.off("receiveMessage");
+      socket.off("deleteMessage");
     };
   }, [convoID]);
 
@@ -121,6 +129,8 @@ const ConversationPage = () => {
       await axios.delete(`http://localhost:5001/messages/${messageID}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
+      socket.emit("deleteMessage", messageID, convoID);
 
       setMessages((prevMessages) => prevMessages.filter((message) => message._id !== messageID));
       setSearchResults((prevResults) => prevResults.filter((message) => message._id !== messageID));
