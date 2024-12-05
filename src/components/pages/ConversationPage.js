@@ -204,40 +204,48 @@ const ConversationPage = () => {
         </button>
       </div>
 
+
+
       <div className="messages-container">
         {isSearching ? (
           <p>Searching...</p>
         ) : searchResults.length > 0 ? (
-          <div className="messages-list">
-            <h3>Search Results</h3>
+          <div className="search-results">
+            <h3 className="search-title">Search Results</h3>
             {searchResults.map((message) => (
-              <div
-                key={message._id}
-                className={`message-item ${message.sender === userID ? 'sent' : 'received'}`}
-                onContextMenu={(e) => handleContextMenu(e, message._id)}
-              >
-                <div className={`message-sender ${message.sender === userID ? 'sent-name' : 'received-name'}`}>
-                  {userNames[message.sender]}
+              <div key={message._id} className="search-message-item">
+                <div className="search-message-header">
+                  <span className="search-message-sender">{userNames[message.sender]}</span>
+                  <span className="search-message-timestamp">
+                    {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </span>
                 </div>
-                <div className="message-content">{message.content}</div>
-                <div className="message-timestamp">
-                  {new Date(message.timestamp).toLocaleString()}
+                <div className="search-message-content">
+                  {message.content}
                 </div>
+                <hr className="search-divider" />
               </div>
             ))}
           </div>
         ) : (
           <div className="messages-list">
+            {/* Original conversation messages are displayed here */}
             {messages.map((message) => (
-              <div
-                key={message._id}
-                className={`message-item ${message.sender === userID ? 'sent' : 'received'}`}
-                onContextMenu={(e) => handleContextMenu(e, message._id)}
-              >
+              <div key={message._id} className={`message-item ${message.sender === userID ? 'sent' : 'received'}`}>
                 <div className={`message-sender ${message.sender === userID ? 'sent-name' : 'received-name'}`}>
                   {userNames[message.sender]}
                 </div>
-                <div className="message-content">{message.content}</div>
+                <div className="message-content">
+                  {message.content}
+                  {message.sender === userID && (
+                    <button
+                      className="delete-button"
+                      onClick={() => handleDeleteMessage(message._id)}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
                 <div className="message-timestamp">
                   {new Date(message.timestamp).toLocaleString()}
                 </div>
@@ -247,6 +255,8 @@ const ConversationPage = () => {
           </div>
         )}
       </div>
+
+
 
       {/* Delete Button context menu */}
       {contextMenu && (
