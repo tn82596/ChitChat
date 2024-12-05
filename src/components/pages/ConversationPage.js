@@ -9,7 +9,7 @@ const socket = io("http://localhost:5001"); // Connect to the backend
 
 const ConversationPage = () => {
   const { convoID } = useParams();
-  const navigate = useNavigate(); // Use navigate to handle navigation
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [userID, setUserID] = useState(null);
@@ -17,6 +17,7 @@ const ConversationPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [contextMenu, setContextMenu] = useState(null); // To store the message's context menu position
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -122,8 +123,10 @@ const ConversationPage = () => {
 
       setMessages((prevMessages) => prevMessages.filter((message) => message._id !== messageID));
       setSearchResults((prevResults) => prevResults.filter((message) => message._id !== messageID));
+      setContextMenu(null); // Close the context menu after deletion
+      console.log("Message deleted");
     } catch (error) {
-      console.error('Error deleting message:', error);
+      console.error('Error deleting message:', error.response ? error.response.data : error);
     }
   };
 
@@ -163,8 +166,21 @@ const ConversationPage = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleContextMenu = (e, messageID) => {
+    e.preventDefault(); 
+    setContextMenu({
+      x: e.clientX, 
+      y: e.clientY, 
+      messageID: messageID, // Store the message ID for later use
+    });
+  };
+
+  const closeContextMenu = () => {
+    setContextMenu(null);
+  };
+
   return (
-    <div className="conversation-page">
+    <div className="conversation-page" onClick={closeContextMenu}>
       <button className="sign-out-button" onClick={handleSignOut}>
         Sign Out
       </button>
@@ -195,21 +211,15 @@ const ConversationPage = () => {
           <div className="messages-list">
             <h3>Search Results</h3>
             {searchResults.map((message) => (
-              <div key={message._id} className={`message-item ${message.sender === userID ? 'sent' : 'received'}`}>
+              <div
+                key={message._id}
+                className={`message-item ${message.sender === userID ? 'sent' : 'received'}`}
+                onContextMenu={(e) => handleContextMenu(e, message._id)}
+              >
                 <div className={`message-sender ${message.sender === userID ? 'sent-name' : 'received-name'}`}>
                   {userNames[message.sender]}
                 </div>
-                <div className="message-content">
-                  {message.content}
-                  {message.sender === userID && (
-                    <button
-                      className="delete-button"
-                      onClick={() => handleDeleteMessage(message._id)}
-                    >
-                      Delete
-                    </button>
-                  )}
-                </div>
+                <div className="message-content">{message.content}</div>
                 <div className="message-timestamp">
                   {new Date(message.timestamp).toLocaleString()}
                 </div>
@@ -219,21 +229,15 @@ const ConversationPage = () => {
         ) : (
           <div className="messages-list">
             {messages.map((message) => (
-              <div key={message._id} className={`message-item ${message.sender === userID ? 'sent' : 'received'}`}>
+              <div
+                key={message._id}
+                className={`message-item ${message.sender === userID ? 'sent' : 'received'}`}
+                onContextMenu={(e) => handleContextMenu(e, message._id)}
+              >
                 <div className={`message-sender ${message.sender === userID ? 'sent-name' : 'received-name'}`}>
                   {userNames[message.sender]}
                 </div>
-                <div className="message-content">
-                  {message.content}
-                  {message.sender === userID && (
-                    <button
-                      className="delete-button"
-                      onClick={() => handleDeleteMessage(message._id)}
-                    >
-                      Delete
-                    </button>
-                  )}
-                </div>
+                <div className="message-content">{message.content}</div>
                 <div className="message-timestamp">
                   {new Date(message.timestamp).toLocaleString()}
                 </div>
@@ -243,6 +247,17 @@ const ConversationPage = () => {
           </div>
         )}
       </div>
+
+      {/* Delete Button context menu */}
+      {contextMenu && (
+        <div
+          className="delete-context-menu"
+          style={{ top: contextMenu.y, left: contextMenu.x }}
+          onClick={() => handleDeleteMessage(contextMenu.messageID)}
+        >
+          <button>Delete</button>
+        </div>
+      )}
 
       {/* Message Input */}
       <div className="message-input-container">
