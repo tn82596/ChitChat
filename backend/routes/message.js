@@ -1,5 +1,6 @@
 const express = require("express");
 const Message = require("../models/Message.js");
+const mongoose = require("mongoose");
 const Conversation = require("../models/Conversation.js");
 const verifyToken = require("../middleware/verifyToken");
 const router = express.Router();
@@ -81,5 +82,46 @@ router.get("/search/:conversationId", async (req, res) => {
   }
 });
 
-module.exports = router;
+// Delete a message by ID
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Find the message to delete
+    const message = await Message.findById(id);
+    if (!message) {
+      return res.status(404).json({ error: "Message not found" });
+    }
+
+    // Delete the message
+    await Message.findByIdAndDelete(id);
+
+    // Find the conversation the message belongs to
+    const conversationId = message.conversationId;
+
+    // Get the most recent message in the conversation after deletion
+    const mostRecentMessage = await Message.findOne({ conversationId })
+      .sort({ timestamp: -1 }) 
+      .exec();
+
+    // Update the conversation's lastMessage and updatedAt fields
+    if (mostRecentMessage) {
+      await Conversation.findByIdAndUpdate(conversationId, {
+        lastMessage: mostRecentMessage._id,
+        updatedAt: mostRecentMessage.timestamp,
+      });
+    } else {
+      await Conversation.findByIdAndUpdate(conversationId, {
+        lastMessage: null,
+        updatedAt: null,
+      });
+    }
+
+    res.status(200).json({ message: "Message deleted and conversation updated." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while deleting the message." });
+  }
+});
+
 module.exports = router;
