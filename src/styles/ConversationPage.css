@@ -203,16 +203,29 @@
   margin-bottom: 10px;
 }
 
-.delete-button {
-  margin-left: 10px;
-  padding: 5px 10px;
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+/* Styles for the context menu where the delete button will appear */
+.delete-context-menu {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Ensure it appears above other content */
+  padding: 5px;
 }
 
-.delete-button:hover {
-  background-color: #e60000;
+.delete-context-menu button {
+  background-color: #ff4d4d; /* Red background for delete */
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%;
+  text-align: center;
+}
+
+.delete-context-menu button:hover {
+  background-color: #ff1a1a; /* Darker red on hover */
 }
