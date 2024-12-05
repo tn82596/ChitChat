@@ -5,6 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client'; // Import Socket.IO client
 import '../../styles/ConversationPage.css';
 
+
 const socket = io("http://localhost:5001"); // Connect to the backend
 
 const ConversationPage = () => {
@@ -210,10 +211,16 @@ const ConversationPage = () => {
         {isSearching ? (
           <p>Searching...</p>
         ) : searchResults.length > 0 ? (
+
           <div className="search-results">
             <h3 className="search-title">Search Results</h3>
             {searchResults.map((message) => (
-              <div key={message._id} className="search-message-item">
+              <div
+                key={message._id}
+                className="search-message-item"
+                onClick={() => navigate(`/search/${message._id}`)} // Add this to navigate to the SearchPage
+                style={{ cursor: 'pointer' }} // Make it look clickable
+              >
                 <div className="search-message-header">
                   <span className="search-message-sender">{userNames[message.sender]}</span>
                   <span className="search-message-timestamp">
@@ -227,6 +234,9 @@ const ConversationPage = () => {
               </div>
             ))}
           </div>
+          
+          
+
         ) : (
           <div className="messages-list">
             {/* Original conversation messages are displayed here */}

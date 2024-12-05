@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import RecentMessages from './pages/RecentMessages';
 import CreateChat from "./pages/CreateChat"; 
 import ConversationPage from "./pages/ConversationPage";
+import SearchPage from './pages/SearchPage';
 
 const AppRoutes = () => {
   return (
@@ -16,6 +17,7 @@ const AppRoutes = () => {
       <Route path="/recent-messages" element={<RecentMessages />} />
       <Route path="/create-chat" element={<CreateChat />} /> {/* Route for CreateChat */}
       <Route path="/conversation/:convoID" element={<ConversationPage />} />
+      <Route path="/search/:messageID" element={<SearchPage />} />
       </Routes>
   );
 };
