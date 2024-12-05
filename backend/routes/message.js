@@ -124,4 +124,42 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// find the messages surrounding a specific message to be displayed on a search
+router.get('/findSurrounding/:messageID', async (req, res) => {
+  const { messageID } = req.params;
+
+  try {
+    const message = await Message.findById(messageID);
+    if (!message) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+
+    const timestamp = message.timestamp; 
+    const conversationId = message.conversationId;
+
+    // get messages before
+    const beforeMessages = await Message.find({
+      conversationId: conversationId,
+      timestamp: { $lt: timestamp }, 
+    })
+      .sort({ timestamp: -1 }) 
+      .limit(10);
+    
+    // get messages after
+    const afterMessages = await Message.find({
+      conversationId: conversationId, 
+      timestamp: { $gt: timestamp },
+    })
+      .sort({ timestamp: 1 }) 
+      .limit(10);
+
+    const surroundingMessages = [...beforeMessages.reverse(), message, ...afterMessages];
+
+    res.status(200).json(surroundingMessages);
+  } catch (error) {
+    console.error('Error fetching surrounding messages:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 module.exports = router;
