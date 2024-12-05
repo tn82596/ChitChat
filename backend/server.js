@@ -39,21 +39,9 @@ app.use("/messages", messageRoutes);
 // Socket.IO: Handle real-time messaging
 io.on("connection", (socket) => {
 
-  // Listen for new messages and broadcast them to other users in the conversation
-  socket.on("sendMessage", (message) => {
-    // Notify all users in the conversation about the new message
-    socket.to(message.conversationId).emit("receiveMessage", message);
-  
-    // Notify the RecentMessages page about the updated conversation
-    io.emit("updateConversation", {
-      conversationId: message.conversationId,
-      lastMessage: message,
-      updatedAt: new Date(),
-    });
-  });
-
-  socket.on("deleteMessage", (messageID, conversationId) => {
-    socket.to(conversationId).emit("deleteMessage", messageID);
+  // Listen for new or deleted messages and broadcast them to other users in the conversation
+  socket.on("conversationUpdated", (conversationId) => {
+    io.emit("updateConversation", { conversationId: conversationId });
   });
 
   // Join a specific conversation to listen for updates

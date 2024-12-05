@@ -18,81 +18,56 @@ const RecentMessages = () => {
         userID = decodedToken.id;
     }
 
-    useEffect(() => {
-        const fetchConversations = async () => {
-            try {
-                if (!token) {
-                    console.error("No token found");
-                    navigate("/login");
-                    return;
-                }
+    const fetchConversations = async () => {
+        try {
+            if (!token) {
+                console.error("No token found");
+                navigate("/login");
+                return;
+            }
 
-                // Fetch all conversations
-                const response = await axios.get(`http://localhost:5001/conversations/${userID}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+            // Fetch all conversations
+            const response = await axios.get(`http://localhost:5001/conversations/${userID}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
-                // Fetch names for each participant in conversations
-                const updatedConversations = await Promise.all(response.data.map(async (conversation) => {
-                    const participantNames = await Promise.all(conversation.participants.map(async (participantID) => {
-                        if (participantID === userID) return 'You';
-                        try {
-                            const participantResponse = await axios.get(`http://localhost:5001/user/name/${participantID}`, {
-                                headers: {
-                                    Authorization: `Bearer ${token}`
-                                }
-                            });
-                            return participantResponse.data.name;
-                        } catch (error) {
-                            console.error(`Error fetching name for user ID ${participantID}:`, error);
-                            return participantID; // Fallback to showing the ID in case of error
-                        }
-                    }));
-
-                    return {
-                        ...conversation,
-                        participantNames,
-                    };
+            // Fetch names for each participant in conversations
+            const updatedConversations = await Promise.all(response.data.map(async (conversation) => {
+                const participantNames = await Promise.all(conversation.participants.map(async (participantID) => {
+                    if (participantID === userID) return 'You';
+                    try {
+                        const participantResponse = await axios.get(`http://localhost:5001/user/name/${participantID}`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`
+                            }
+                        });
+                        return participantResponse.data.name;
+                    } catch (error) {
+                        console.error(`Error fetching name for user ID ${participantID}:`, error);
+                        return participantID; // Fallback to showing the ID in case of error
+                    }
                 }));
 
-                setConversations(updatedConversations);
-            } catch (error) {
-                console.error("Error fetching conversations:", error);
-            }
-        };
+                return {
+                    ...conversation,
+                    participantNames,
+                };
+            }));
 
+            setConversations(updatedConversations);
+        } catch (error) {
+            console.error("Error fetching conversations:", error);
+        }
+    };
+
+    useEffect(() => {
         fetchConversations();
 
         // Listen for updates via Socket.IO
-        socket.on("updateConversation", (updatedConversation) => {
-            setConversations((prevConversations) => {
-                // Find existing conversation by ID
-                const existingConversation = prevConversations.find(
-                    (conversation) => conversation._id === updatedConversation.conversationId
-                );
-
-                // Ensure participant names exist
-                const participantNames = existingConversation
-                    ? existingConversation.participantNames // Use existing names if present
-                    : updatedConversation.participants?.map((id) => (id === userID ? "You" : id)) || [];
-
-                // Remove the existing conversation from the list
-                const filteredConversations = prevConversations.filter(
-                    (conversation) => conversation._id !== updatedConversation.conversationId
-                );
-
-                // Merge updated fields and add to the top of the list
-                return [
-                    {
-                        ...existingConversation,
-                        ...updatedConversation,
-                        participantNames,
-                    },
-                    ...filteredConversations,
-                ];
-            });
+        socket.on("updateConversation", () => {
+            fetchConversations();
         });
 
         return () => {
