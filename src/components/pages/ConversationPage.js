@@ -27,6 +27,7 @@ const ConversationPage = () => {
   const [theme, setTheme] = useState('default'); // State for selected theme
   const [selectedMessage, setSelectedMessage] = useState(null);
   const messagesEndRef = useRef(null);
+  const isInitialLoad = useRef(true);
 
   // Fetch messages when conversation is selected
   const fetchMessages = async () => {
@@ -73,13 +74,18 @@ const ConversationPage = () => {
 
   useEffect(() => {
     if (convoID) {
-      fetchMessages();  // Fetch messages on first load
-      scrollToBottom();
+      fetchMessages().then(() => {
+        if (isInitialLoad.current) {
+          scrollToBottom(); 
+          isInitialLoad.current = false; 
+        }
+      });
 
       socket.emit("joinConversation", convoID);  // Join the conversation on socket
 
       // Listen for conversation updates 
       socket.on("updateConversation", () => {
+        isInitialLoad.current = false;
         fetchMessages();
       });
 
