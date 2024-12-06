@@ -17,8 +17,9 @@
   font-weight: bold;
   color: white;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   text-align: center;
+  margin-top: 40px;
 }
 
 /* Messages Section */
@@ -177,18 +178,26 @@
 }
 
 .search-button {
-  padding: 8px 16px;
+  padding: 12px 25px;
   margin-left: 10px;
-  background-color: #007bff;
-  color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  background-color: white;
+  color: #5895f0;
   cursor: pointer;
+  font-size: 1.2rem;
+  font-family: 'Roboto', sans-serif; /* Use Roboto for the button text */
+  font-weight: 600;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-.search-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.search-buttonn:hover:enabled {
+  transform: scale(1.05); /* Slight zoom-in effect */
+}
+
+/* Active button effects */
+.search-button:active {
+  transform: scale(0.98); /* Slight zoom-out effect on click */
 }
 
  /* Search Results */
