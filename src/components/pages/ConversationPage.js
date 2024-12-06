@@ -25,6 +25,7 @@ const ConversationPage = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [contextMenu, setContextMenu] = useState(null); // To store the message's context menu position
   const [theme, setTheme] = useState('default'); // State for selected theme
+  const [selectedMessage, setSelectedMessage] = useState(null);
   const messagesEndRef = useRef(null);
 
   // Fetch messages when conversation is selected
@@ -197,6 +198,25 @@ const ConversationPage = () => {
       setTheme(event.target.value);
     };
 
+    const handleReaction = async (messageId, reaction) => {
+      try {
+        const token = localStorage.getItem('token');
+        await axios.post(
+          `http://localhost:5001/messages/${messageId}/reactions`,
+          { reaction },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+  
+        socket.emit("conversationUpdated", convoID);
+      } catch (error) {
+        console.error('Error adding reaction:', error);
+      }
+    };
+  
+    const toggleReactions = (messageId) => {
+      setSelectedMessage(selectedMessage === messageId ? null : messageId);
+    };
+
     return (
       <div className="conversation-page" onClick={closeContextMenu}>
         <button className="sign-out-button" onClick={handleSignOut}>
@@ -262,6 +282,7 @@ const ConversationPage = () => {
                   key={message._id}
                   className={`message-item ${message.sender === userID ? 'sent' : 'received'}`}
                   onContextMenu={(e) => handleContextMenu(e, message._id)}
+                  onClick={() => toggleReactions(message._id)}
                 >
                   <div className={`message-sender ${message.sender === userID ? 'sent-name' : 'received-name'}`}>
                     {userNames[message.sender]}
@@ -272,6 +293,14 @@ const ConversationPage = () => {
                   <div className="message-timestamp">
                     {new Date(message.timestamp).toLocaleString()}
                   </div>
+
+                  {selectedMessage === message._id && (
+                    <div className="reactions-container">
+                      <button onClick={() => handleReaction(message._id, '❤️')} className="reaction-button">❤️</button>
+                      <button onClick={() => handleReaction(message._id, '👍')} className="reaction-button">👍</button>
+                      <button onClick={() => handleReaction(message._id, '👎')} className="reaction-button">👎</button>
+                    </div>
+                  )}
                 </div>
               ))}
               <div ref={messagesEndRef}></div>
