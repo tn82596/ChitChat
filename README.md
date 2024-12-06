@@ -53,5 +53,5 @@ Sets up web server to process requests from the web browser.
 
 * [Ashley Wu](https://github.com/ashleyjwu)
 * [Charline Chen](https://github.com/charxmandr)
-* [Chloe Yoon](https://github.com/cloyooni)
+* [Hana Yoon](https://github.com/cloyooni)
 * [Theanh Nguyen](https://github.com/tn82596)
