@@ -163,7 +163,7 @@ router.get('/findSurrounding/:messageID', async (req, res) => {
 });
 
 // Edit a message
-router.put("/:messageId", async (req, res) => {
+router.put("/edit/:messageId", async (req, res) => {
   const { messageId } = req.params;
   const { content } = req.body;
 
