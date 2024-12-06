@@ -162,4 +162,27 @@ router.get('/findSurrounding/:messageID', async (req, res) => {
   }
 });
 
+// Edit a message
+router.put("/:messageId", async (req, res) => {
+  const { messageId } = req.params;
+  const { content } = req.body;
+
+  try {
+    const updatedMessage = await Message.findByIdAndUpdate(
+      messageId,
+      { content }, 
+      { new: true } 
+    );
+
+    if (!updatedMessage) {
+      return res.status(404).json({ error: "Message not found" });
+    }
+
+    res.status(200).json(updatedMessage);
+  } catch (error) {
+    console.error("Error updating message:", error);
+    res.status(500).json({ error: "Failed to update message" });
+  }
+});
+
 module.exports = router;
