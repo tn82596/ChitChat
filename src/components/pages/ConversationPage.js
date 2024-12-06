@@ -7,6 +7,12 @@ import '../../styles/ConversationPage.css';
 
 const socket = io("http://localhost:5001"); // Connect to the backend
 
+const themes = {
+  default: "#f9f9f9", // Original white background
+  dark: "#707f90", // Dark theme
+  blue: "#d1e7ff", // Light blue theme
+};
+
 const ConversationPage = () => {
   const { convoID } = useParams();
   const navigate = useNavigate();
@@ -18,6 +24,7 @@ const ConversationPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [contextMenu, setContextMenu] = useState(null); // To store the message's context menu position
+  const [theme, setTheme] = useState('default'); // State for selected theme
   const messagesEndRef = useRef(null);
 
   // Fetch messages when conversation is selected
@@ -186,6 +193,10 @@ const ConversationPage = () => {
       setContextMenu(null);
     };
 
+    const handleThemeChange = (event) => {
+      setTheme(event.target.value);
+    };
+
     return (
       <div className="conversation-page" onClick={closeContextMenu}>
         <button className="sign-out-button" onClick={handleSignOut}>
@@ -211,7 +222,10 @@ const ConversationPage = () => {
           </button>
         </div>
 
-        <div className="messages-container">
+        <div
+        className="messages-container"
+        style={{ backgroundColor: themes[theme] }} // Dynamic theme background
+      >
           {isSearching ? (
             <p>Searching...</p>
           ) : searchResults.message ? (
@@ -264,6 +278,16 @@ const ConversationPage = () => {
             </div>
           )}
         </div>
+
+        {/* Theme Selector */}
+      <div className="theme-selector">
+        <label htmlFor="theme">Select Theme:</label>
+        <select id="theme" value={theme} onChange={handleThemeChange}>
+          <option value="default">Light</option>
+          <option value="dark">Dark</option>
+          <option value="blue">Blue</option>
+        </select>
+      </div>
 
         {/* Delete Button context menu */}
         {contextMenu && (
