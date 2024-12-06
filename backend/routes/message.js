@@ -51,7 +51,7 @@ router.get("/:conversationId", verifyToken, async (req, res) => {
   });
 
 // Search for messages by keyword in a specific conversation
-router.get("/search/:conversationId", async (req, res) => {
+router.get("/search/:conversationId", verifyToken, async (req, res) => {
   try {
     const { conversationId } = req.params;
     const { query } = req.query; // Get the query string from the URL
@@ -83,7 +83,7 @@ router.get("/search/:conversationId", async (req, res) => {
 });
 
 // Delete a message by ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -125,7 +125,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // find the messages surrounding a specific message to be displayed on a search
-router.get('/findSurrounding/:messageID', async (req, res) => {
+router.get('/findSurrounding/:messageID', verifyToken, async (req, res) => {
   const { messageID } = req.params;
 
   try {
@@ -163,7 +163,7 @@ router.get('/findSurrounding/:messageID', async (req, res) => {
 });
 
 // Edit a message
-router.put("/edit/:messageId", async (req, res) => {
+router.put("/edit/:messageId", verifyToken, async (req, res) => {
   const { messageId } = req.params;
   const { content } = req.body;
 
@@ -184,5 +184,44 @@ router.put("/edit/:messageId", async (req, res) => {
     res.status(500).json({ error: "Failed to update message" });
   }
 });
+
+// react to or remove a reaction from a message
+router.put("/react/:messageId", verifyToken, async (req, res) => {
+  const { messageId } = req.params;
+  const { reaction } = req.body;  // "like", "love", or "dislike"
+
+  if (!["like", "love", "dislike"].includes(reaction)) {
+    return res.status(400).json({ error: "Invalid reaction" });
+  }
+
+  try {
+    const message = await Message.findById(messageId);
+
+    if (!message) {
+      return res.status(404).json({ error: "Message not found" });
+    }
+
+    const userId = req.user.id; // Assuming `req.user.id` is the authenticated user's ID
+
+    // Remove the reaction if the user has already reacted with it
+    if (message.reactions[reaction].includes(userId)) {
+      message.reactions[reaction] = message.reactions[reaction].filter(id => id.toString() !== userId.toString());
+    } else {
+      // Remove any existing reaction of the same user on the message
+      for (let reactType of ["like", "love", "dislike"]) {
+        message.reactions[reactType] = message.reactions[reactType].filter(id => id.toString() !== userId.toString());
+      }
+      // Add the new reaction
+      message.reactions[reaction].push(userId);
+    }
+
+    await message.save();
+    res.status(200).json(message); 
+  } catch (error) {
+    console.error("Error updating reactions:", error);
+    res.status(500).json({ error: "Failed to update reactions" });
+  }
+});
+
 
 module.exports = router;

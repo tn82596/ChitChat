@@ -7,6 +7,11 @@ const messageSchema = new mongoose.Schema({
   attachments: [{ type: String }], // URLs or file paths for attachments
   status: { type: String, enum: ["sent", "delivered", "read"], default: "sent" },
   timestamp: { type: Date, default: Date.now },
+  reactions: {  
+    like: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],  
+    love: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],   
+    dislike: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }] 
+  }
 });
 
 module.exports = mongoose.model("Message", messageSchema);
