@@ -198,6 +198,7 @@ const ConversationPage = () => {
       setTheme(event.target.value);
     };
 
+    //Reactions
     const handleReaction = async (messageId, reaction) => {
       try {
         const token = localStorage.getItem('token');
@@ -282,7 +283,7 @@ const ConversationPage = () => {
                   key={message._id}
                   className={`message-item ${message.sender === userID ? 'sent' : 'received'}`}
                   onContextMenu={(e) => handleContextMenu(e, message._id)}
-                  onClick={() => toggleReactions(message._id)}
+                  onClick={() => toggleReactions(message._id)}  //REACTIONS
                 >
                   <div className={`message-sender ${message.sender === userID ? 'sent-name' : 'received-name'}`}>
                     {userNames[message.sender]}
@@ -294,6 +295,7 @@ const ConversationPage = () => {
                     {new Date(message.timestamp).toLocaleString()}
                   </div>
 
+                  {/* REACTIONS */}
                   {selectedMessage === message._id && (
                     <div className="reactions-container">
                       <button onClick={() => handleReaction(message._id, '❤️')} className="reaction-button">❤️</button>
