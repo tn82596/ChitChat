@@ -81,7 +81,6 @@
 
 /* Message Input Section */
 .message-input-container {
-  
   display: flex;
   width: 90%;
   max-width: 800px; /* Match container width */
@@ -101,7 +100,6 @@
   margin-right: 10px;
   font-family: 'Roboto', sans-serif;
 }
-
 
 .send-button {
   padding: 12px 25px;
@@ -202,7 +200,7 @@
   transform: scale(0.98); /* Slight zoom-out effect on click */
 }
 
- /* Search Results */
+/* Search Results */
 .search-results {
   width: 100%;
   max-width: 700px;
@@ -253,7 +251,7 @@
   margin: 10px 0;
 }
 
-/* Styles for the context menu where the delete button will appear */
+/* Styles for the context menu where the edit and delete buttons will appear */
 .delete-context-menu {
   position: absolute;
   background-color: white;
@@ -264,8 +262,8 @@
   padding: 5px;
 }
 
+/* Common styling for both buttons */
 .delete-context-menu button {
-  background-color: #ff4d4d; /* Red background for delete */
   color: white;
   border: none;
   padding: 8px 15px;
@@ -274,12 +272,26 @@
   font-size: 14px;
   width: 100%;
   text-align: center;
+  margin-bottom: 5px; /* Add a small gap between the two buttons */
 }
 
-.delete-context-menu button:hover {
+/* Delete button styling */
+.delete-context-menu button.delete-button {
+  background-color: #ff4d4d; /* Red background for delete */
+}
+
+.delete-context-menu button.delete-button:hover {
   background-color: #ff1a1a; /* Darker red on hover */
 }
 
+/* Edit button styling */
+.delete-context-menu button.edit-button {
+  background-color: #5895f0; /* Blue background for edit */
+}
+
+.delete-context-menu button.edit-button:hover {
+  background-color: #4a82d6; /* Darker blue on hover */
+}
 
 /* Theme Selector */
 .theme-selector {
@@ -348,4 +360,75 @@
 
 .reaction-button:hover {
   transform: scale(1.2);
+}
+
+/* Edit Message Modal */
+.edit-message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: fixed; /* To appear like a modal */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000; /* Ensure it appears above other elements */
+}
+
+.edit-message-input {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  resize: vertical;
+  margin-bottom: 15px;
+  font-family: 'Roboto', sans-serif;
+  box-sizing: border-box;
+}
+
+/* Save and Cancel Buttons */
+.edit-message-container button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  margin: 5px;
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.edit-message-container button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.save-button {
+  background-color: #5895f0;
+  color: white;
+}
+
+.save-button:hover:enabled {
+  background-color: #4a82d6;
+}
+
+.cancel-button {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.cancel-button:hover {
+  background-color: #d0d0d0;
 }
