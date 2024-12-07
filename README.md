@@ -38,10 +38,28 @@ This downloads all dependencies for the backend that are declared in the package
 ### `code .env`
 
 Makes your .env file. This file should be formatted like so: 
-> MONGO_URI=... \
-> JWT_SECRET=...
+> MONGO_URI=your_mongodb_connection_string \
+> JWT_SECRET=your_jwt_secret
 
-Follow these instructions to obtain your mongo url and jwt secret (add later)
+How to Obtain the MongoDB URI:
+Create a MongoDB Cluster (if not already created):
+
+Visit MongoDB Atlas.
+Sign in or create an account.
+Follow the steps to create a free cluster.
+Get the Connection String:
+
+Once the cluster is set up, click "Connect" for your cluster in the Atlas dashboard.
+Select "Connect your application".
+Copy the connection string provided (e.g., mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>?retryWrites=true&w=majority).
+Update the Connection String:
+
+Replace <username> and <password> with your MongoDB credentials.
+Replace <dbname> with the name of your database.
+
+How to Obtain the jwt_secret: 
+Generate any random string and paste it in.
+
 
 ### `node server.js`
 
