@@ -341,8 +341,8 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.5rem;
-  padding: 5px;
+  font-size: 1rem;
+  padding: 1px;
   transition: transform 0.2s;
 }
 
