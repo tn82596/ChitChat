@@ -47,7 +47,6 @@ Create a MongoDB Cluster (if not already created):
 Visit MongoDB Atlas.
 Sign in or create an account.
 Follow the steps to create a free cluster.
-Get the Connection String:
 
 Once the cluster is set up, click "Connect" for your cluster in the Atlas dashboard.
 Select "Connect your application".
