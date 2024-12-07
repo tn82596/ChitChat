@@ -623,6 +623,7 @@ const ConversationPage = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
+      socket.emit("conversationUpdated", convoID);
       const updatedMessage = response.data;
 
       setMessages((prevMessages) =>
