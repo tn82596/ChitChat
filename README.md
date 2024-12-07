@@ -52,8 +52,8 @@ Once the cluster is set up, click "Connect" for your cluster in the Atlas dashbo
 Select "Connect your application".
 Copy the connection string provided (e.g., mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>?retryWrites=true&w=majority).
 
-Replace <username> and <password> with your MongoDB credentials.
-Replace <dbname> with the name of your database.
+Replace username and password with your MongoDB credentials.
+Replace dbname with the name of your database.
 
 ### `How to Obtain the jwt_secret:`
  
