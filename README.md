@@ -2,7 +2,7 @@
 
 ## Overview
 
-ChitChat is a real-time messaging app where you can send messages to your friends in 1-on-1 and group chats, search through your texts, edit and delete your messages, react with emojis, and a secure sign-in and sign-out system.
+ChitChat is a real-time messaging app where you can send messages to your friends in 1-on-1 chats, search through your texts, edit and delete your messages, react with emojis, and a secure sign-in and sign-out system.
 
 ---
 
