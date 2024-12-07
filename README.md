@@ -41,7 +41,7 @@ Makes your .env file. This file should be formatted like so:
 > MONGO_URI=your_mongodb_connection_string \
 > JWT_SECRET=your_jwt_secret
 
-How to Obtain the MongoDB URI:
+### `How to Obtain the MongoDB URI:`
 Create a MongoDB Cluster (if not already created):
 
 Visit MongoDB Atlas.
@@ -57,7 +57,8 @@ Update the Connection String:
 Replace <username> and <password> with your MongoDB credentials.
 Replace <dbname> with the name of your database.
 
-How to Obtain the jwt_secret: 
+### `How to Obtain the jwt_secret:`
+ 
 Generate any random string and paste it in.
 
 
